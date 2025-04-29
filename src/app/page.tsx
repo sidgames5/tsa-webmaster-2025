@@ -1,9 +1,9 @@
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center gap-16 p-6">
+    <div className="flex flex-col items-center justify-center gap-16">
       {/* Hero Section */}
       <div
-        className="relative w-full min-h-[70vh] flex items-center justify-center"
+        className="relative w-[100vh] min-h-[70vh] flex items-center justify-center"
         style={{
           backgroundImage: "url('/images/360_F_69024210_2JAt5Ura3ETabT3KVb1SNPkPNlWDbLKT.webp')",
           backgroundSize: "cover",
