@@ -3,7 +3,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center gap-16">
       {/* Hero Section */}
       <div
-        className="relative w-[100vh] min-h-[70vh] flex items-center justify-center"
+        className="relative w-full min-h-[50vh] flex items-center justify-center"
         style={{
           backgroundImage: "url('/images/360_F_69024210_2JAt5Ura3ETabT3KVb1SNPkPNlWDbLKT.webp')",
           backgroundSize: "cover",
@@ -11,7 +11,7 @@ export default function Home() {
         }}
       >
         <div className="absolute inset-0 bg-black/60" />
-        <h1 className="relative font-tangerine text-white text-6xl md:text-8xl drop-shadow-lg text-center">
+        <h1 className="relative tangerine-bold text-white text-8xl md:text-8xl drop-shadow-lg text-center">
           Sprout & Spoon
         </h1>
       </div>
