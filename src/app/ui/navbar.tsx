@@ -1,19 +1,31 @@
 import Link from "next/link";
 
 export default function Navbar() {
+  
   return (
-    <nav className="bg-gray-800 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-lg font-semibold">
+    <nav className="bg-gray-900 shadow-md">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <Link href="/" className="text-white text-2xl font-bold tracking-tight">
           Sprout & Spoon
-        </div>
-        <div>
-          <Link href="/" className="text-gray-300 hover:text-white px-3 py-2">Home</Link>
-          <Link href="/menu" className="text-gray-300 hover:text-white px-3 py-2">Menu</Link>
-          <Link href="/reservations" className="text-gray-300 hover:text-white px-3 py-2">Reservations</Link>
-          <Link href="/catering" className="text-gray-300 hover:text-white px-3 py-2">Catering</Link>
+        </Link>
+        <div className="space-x-6">
+          <NavLink href="/">Home</NavLink>
+          <NavLink href="/menu">Menu</NavLink>
+          <NavLink href="/reservations">Reservations</NavLink>
+          <NavLink href="/catering">Catering</NavLink>
         </div>
       </div>
     </nav>
+  );
+}
+
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="text-blue-100 hover:text-white transition-colors duration-200 font-medium"
+    >
+      {children}
+    </Link>
   );
 }
