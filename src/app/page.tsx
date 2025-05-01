@@ -52,7 +52,7 @@ export default function Home() {
             <p className="text-gray-600 text-base">Quinoa, roasted sweet potatoes, kale, and tahini drizzle.</p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <img src="/images/avocado_toast.jpeg" alt="Avocado Toast" className="w-full rounded-2xl shadow-md" />
+            <img src="../images/avocado_toast.jpeg" alt="Avocado Toast" className="w-full rounded-2xl shadow-md" />
             <h3 className="text-xl font-semibold text-green-700">Avocado Bloom Toast</h3>
             <p className="text-gray-600 text-base">Sourdough, smashed avocado, heirloom tomatoes, microgreens.</p>
           </div>
