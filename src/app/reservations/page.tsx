@@ -3,6 +3,17 @@
 import { reserveTable } from './actions';
 
 export default function Page() {
+    async function handleReserve(formData: FormData) {
+        const data = await reserveTable(formData);
+
+        if (data.error) {
+            alert(data.error);
+        }
+
+        if (data.success) {
+            alert(data.message);
+        }
+    }
     return (
         <div className="flex items-center justify-center flex-col gap-8">
             <div
@@ -19,7 +30,7 @@ export default function Page() {
 
             <div className="flex flex-col gap-4 items-center">
                 <h1 className="dm-serif-text-regular-italic text-5xl">Book a table</h1>
-                <form action={reserveTable} className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <form action={handleReserve} className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                     <input type="text" id="name" name="name" className="p-2 border border-gray-300 rounded-md" placeholder='Name' required />
 
                     <input type="number" id="guests" name="guests" min="1" max="20" className="p-2 border border-gray-300 rounded-md" placeholder='Number of guests' required />
