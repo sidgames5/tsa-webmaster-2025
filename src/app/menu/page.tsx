@@ -2,10 +2,10 @@
 
 export default function MenuPage() {
   return (
-    <div className="flex flex-col items-center gap-12 p-8">
+    <div className="flex flex-col items-center gap-12">
       {/* Hero Section */}
       <div
-        className="relative min-h-[50vh] w-full flex items-center justify-center"
+        className="relative min-h-[50vh] w-[100vw] flex items-center justify-center"
         style={{
           backgroundImage: "url('https://dm0qx8t0i9gc9.cloudfront.net/watermarks/image/rDtN98Qoishumwih/vintage-menu-background_GkbMaF9d_SB_PM.jpg')", // <- Replace with your menu image
           backgroundSize: 'cover',

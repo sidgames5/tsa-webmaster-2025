@@ -9,7 +9,6 @@ export default function Navbar() {
           Sprout & Spoon
         </Link>
         <div className="space-x-6">
-          <NavLink href="/">Home</NavLink>
           <NavLink href="/menu">Menu</NavLink>
           <NavLink href="/reservations">Reservations</NavLink>
           <NavLink href="/catering">Catering</NavLink>
