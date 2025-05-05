@@ -191,8 +191,8 @@ export default function Home() {
                                         alt={dish.title}
                                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                         loading="lazy"
-                                        width={0}
-                                        height={0}
+                                        width={512}
+                                        height={512}
                                     />
                                     {dish.seasonal && (
                                         <span className="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
