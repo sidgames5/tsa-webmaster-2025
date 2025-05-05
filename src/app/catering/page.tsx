@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { handleCateringSubmit } from "./actions";
 
+
 const CateringPage: React.FC = () => {
     const [formData, setFormData] = useState({
         name: "",
@@ -13,6 +14,14 @@ const CateringPage: React.FC = () => {
         details: "",
     });
 
+    const imageLinks = [
+        "https://thumbs.dreamstime.com/b/useful-italian-vegan-food-vegetarian-bowl-breakfast-porridge-couscous-avocado-cucumber-brussels-sprouts-vegetable-stew-149990557.jpg",
+        "https://thumbs.dreamstime.com/b/vibrant-grilled-vegetable-kebab-platter-showcasing-diverse-culinary-delights-colorful-appetizing-arrangement-skewered-354573845.jpg",
+        "https://minimalistbaker.com/wp-content/uploads/2017/05/Veggie-Skewers-SQUARE.jpg",
+        "https://images.openai.com/thumbnails/b6766ba7a1afa9fcfcde8e181c003139.jpeg"
+      ];
+      
+
     // Handle input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -22,156 +31,162 @@ const CateringPage: React.FC = () => {
         });
     };
 
+    const mealPlans = [
+        {
+            title: "Italian Veggie Bowl",
+            items: [
+                "Quinoa \"Meatballs\"",
+                "Spaghetti",
+                "Garlic Herb Breadsticks",
+                "Fresh Basil Tomato Sauce",
+            ],
+            image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+        },
+        {
+            title: "Garden Fresh Delight",
+            items: [
+                "Grilled Veggie Skewers",
+                "Herbed Quinoa Pilaf",
+                "Arugula & Citrus Salad",
+                "Chickpea Fritters",
+            ],
+            image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+        },
+        {
+            title: "Rustic Tuscan Greens",
+            items: [
+                "White Beans & Kale Stew",
+                "Roasted Garlic Broccolini",
+                "Stuffed Bell Peppers",
+                "Toasted Focaccia",
+            ],
+            image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8NXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
+        },
+        {
+            title: "Coastal Herb Harvest",
+            items: [
+                "Lemon-Herb Couscous",
+                "Grilled Zucchini & Squash",
+                "Spinach & Artichoke Dip",
+                "Rosemary Flatbread",
+            ],
+            image: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MTB8fHxlbnwwfHx8fHw%3D&auto=format&fit=crop&w=500&q=60"
+        },
+    ];
+
     return (
-        <div className="px-4 py-10 max-w-6xl mx-auto">
-            {/* Hero Section */}
-            <div className="text-center mb-10">
-                <h1 className="text-4xl font-bold mb-4">Catering Services</h1>
-                <p className="text-lg text-gray-600">
-                    Exceptional food and service for your special events.
-                </p>
+        <div className="font-serif text-[#2f2f2f] ">
+            <div className="py-32 bg-center bg-cover bg-no-repeat shadow-inner flex items-center justify-center bg-fixed"
+                style={{
+                    backgroundImage: "url('https://cdn.pixabay.com/photo/2023/11/14/17/39/meal-8388203_1280.jpg')",
+                }}
+            >
+                <div className="bg-white/50 backdrop-blur-md rounded-xl p-10 max-w-4xl mx-auto text-center px-6">
+                    <h1 className="text-5xl font-bold text-[#4b3f2f] mb-4">Catering with Heart</h1>
+                    <p className="text-xl text-[#6e6256] max-w-2xl mx-auto">
+                        Let us bring the comfort of a vegetarian kitchen to your next special event.
+                    </p>
+                </div>
             </div>
 
-            {/* Services Section */}
-            <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-                <div className="p-6 bg-white shadow-lg rounded-2xl text-center">
-                    <h2 className="text-xl font-semibold mb-2">Weddings</h2>
-                    <p className="text-gray-600">Elegant menus crafted for your big day.</p>
+            <div className="py-24 bg-[#fcf7f2] flex flex-col items-center">
+                <div className="text-center mb-16"> 
+                    <h1 className="text-5xl text-[#4b3f2f] tracking-white">Special Events</h1>
+                    <p className="mt-4 text-[#7c6f5f] text-lg max-w-xl mx-auto">
+                        Whether it's an elegant wedding or an intimate, gathering, we provide unforgettable culinary experiences.
+                    </p>
                 </div>
-
-                <div className="p-6 bg-white shadow-lg rounded-2xl text-center">
-                    <h2 className="text-xl text-center font-semibold mb-2">Corporate Events</h2>
-                    <p className="text-gray-600">Professional catering for meetings, parties, and more.</p>
+                <div className="max-w-6xl w-full px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
+                    {[
+                        ["Weddings 💍", "Elegant menus crafted for your big day."],
+                        ["Corporate Events 💼", "Professional service for business affairs."],
+                        ["Private Parties 🎉", "From birthdays to reunions—we handle it all."]
+                    ].map(([title, desc], i) => (
+                        <div key={i} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-[#e4dacd]">
+                            <h2 className="text-2xl font-semibold text-[#4b3f2f] mb-3">{title}</h2>
+                            <p className="text-[#6e6256] text-lg leading-relaxed">{desc}</p>
+                        </div>
+                    ))}
                 </div>
-                <div className="p-6 bg-white shadow-lg rounded-2xl text-center">
-                    <h2 className="text-xl font-semibold mb-2">Private Parties</h2>
-                    <p className="text-gray-600">From birthdays to reunions, we handle it all.</p>
-                </div>
-            </section>
-
-            {/* Top Meal Plans */}
-            <section className="mb-16">
-                <h2 className="text-3xl font-bold text-center mb-6">Top Meal Plans</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Italian Veggie Bowl */}
-                    <div className="bg-amber-50 border border-yellow-100 rounded-2xl shadow-md flex flex-col md:flex-row overflow-hidden">
-                        <div className="p-6 flex-1">
-                            <h3 className="text-xl font-semibold mb-2 text-green-800">Italian Veggie Bowl </h3>
-                            <ul className="text-gray=700 list-disc list-inside">
-                                <li>Quinoa "Meatballs"</li>
-                                <li>Spaghetti</li>
-                                <li>Gharlic Herb Breadsticks</li>
-                                <li>Fresh Basil Tomato Sauce</li>
-                            </ul>
-                        </div>
-                        <img src="/images/remove_watermark_image_20250504_003125.jpg" alt="Dinner#1" className="w-full md:w-48 h-auto object-cover" />
-                    </div>
-                    <div className="bg-amber-50 border border-yellow-100 rounded-2xl shadow-md flex flex-col md:flex-row overflow-hidden">
-                        <div className="p-6 flex-1">
-                            <h3 className="text-xl font-semibold mb-2 text-green-800">Garden Fresh Delight</h3>
-                            <ul className="text-gray=700 list-disc list-inside">
-                                <li>Grilled Veggie Skewers</li>
-                                <li>Herbed Quinoa Pilaf</li>
-                                <li>Arugala & Citrus Salad</li>
-                                <li>Chickpea Fritters</li>
-                            </ul>
-                        </div>
-                        <img src="/images/remove_watermark_image_20250504_003125.jpg" alt="Dinner#2" className="w-full md:w-48 h-auto object-cover" />
-                    </div>
-                    <div className="bg-amber-50 border border-yellow-100 rounded-2xl shadow-md flex flex-col md:flex-row overflow-hidden">
-                        <div className="p-6 flex-1">
-                            <h3 className="text-xl font-semibold mb-2 text-green-800">Rustic Tuscan Greens</h3>
-                            <ul className="text-gray=700 list-disc list-inside">
-                                <li>White Beans & Kale Stew</li>
-                                <li>Roasted Garlic Brocollini</li>
-                                <li>Stuffed Bell Peppers</li>
-                                <li>Toasted Focaccia</li>
-                            </ul>
-                        </div>
-                        <img src="/images/remove_watermark_image_20250504_003125.jpg" alt="Dinner#2" className="w-full md:w-48 h-auto object-cover" />
-                    </div>
-                    <div className="bg-amber-50 border border-yellow-100 rounded-2xl shadow-md flex flex-col md:flex-row overflow-hidden">
-                        <div className="p-6 flex-1">
-                            <h3 className="text-xl font-semibold mb-2 text-green-800">Coastal Herb Harvest</h3>
-                            <ul className="text-gray=700 list-disc list-inside">
-                                <li>Lemon-Herb Couscous</li>
-                                <li>Grilled Zucchini & Squash</li>
-                                <li>Spinach & Artichoke Dip</li>
-                                <li>Rosemary Flatbread</li>
-                            </ul>
-                        </div>
-                        <img src="/images/remove_watermark_image_20250504_003125.jpg" alt="Dinner#2" className="w-full md:w-48 h-auto object-cover" />
+            </div>
+                
+            <section className="py-24 bg-gradient-to-br from-[#fdf4e4] to-[#f9eee0]">
+                <div className="max-w-6xl mx-auto px-4">
+                    <h2 className="text-5xl font-extrabold text-center text-[#4b3f2f] mb-16 leading-tight">
+                        Signature Meal Plans
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {mealPlans.map((meal, index) => (
+                            <div
+                                key={index}
+                                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                            >
+                                <div className="h-48 overflow-hidden">
+                                    <img
+                                        src={meal.image}
+                                        alt={meal.title}
+                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <div className="p-6">
+                                    <h3 className="text-xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-amber-600">
+                                        {meal.title}
+                                    </h3>
+                                    <ul className="space-y-2">
+                                        {meal.items.map((item, i) => (
+                                            <li key={i} className="flex items-start">
+                                                <span className="text-amber-600 mr-2">•</span>
+                                                <span>{item}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
-            {/* Contact Form */}
-            <section>
-                <h2 className="text-2xl font-bold mb-4 text-center">Request a Quote</h2>
-                <form action={handleCateringSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input
-                        name="name"
-                        type="text"
-                        placeholder="Name"
-                        className="p-3 rounded-xl border border-gray-300"
-                        value={formData.name}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="email"
-                        type="email"
-                        placeholder="Email"
-                        className="p-3 rounded-xl border border-gray-300"
-                        value={formData.email}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="address"
-                        type="text"
-                        placeholder="Address"
-                        className="p-3 rounded-xl border border-gray-300"
-                        value={formData.address}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="payment"
-                        type="text"
-                        placeholder="Form of Payment"
-                        className="p-3 rounded-xl border border-gray-300"
-                        value={formData.payment}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="eventType"
-                        type="text"
-                        placeholder="Event Type"
-                        className="p-3 rounded-xl border border-gray-300"
-                        value={formData.eventType}
-                        onChange={handleChange}
-                    />
-                    <input
-                        name="eventDate"
-                        type="date"
-                        placeholder="Event Date"
-                        className="p-3 rounded-xl border border-gray-300"
-                        value={formData.eventDate}
-                        onChange={handleChange}
-                    />
-                    <textarea
-                        name="details"
-                        placeholder="Additional Details"
-                        className="md:col-span-2 p-3 rounded-xl border border-gray-300"
-                        value={formData.details}
-                        onChange={handleChange}
-                    />
-                    <button
-                        type="submit"
-                        className="md:col-span-2 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition cursor-pointer"
-                    >
-                        Submit Request
-                    </button>
-                </form>
-            </section>
-        </div>
+                {/* Contact Form */}
+                <div className="bg-[#f5f9f4] py-20">
+                <div className="max-w-4xl mx-auto px-6">
+                    <h2 className="text-3xl font-bold text-center text-[#3e3e3e] mb-10">Request a Quote</h2>
+                    <form action={handleCateringSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {[
+                            ["name", "Name", "text"],
+                            ["email", "Email", "email"],
+                            ["address", "Address", "text"],
+                            ["payment", "Form of Payment", "text"],
+                            ["eventType", "Event Type", "text"],
+                            ["eventDate", "Event Date", "date"]
+                        ].map(([name, placeholder, type]) => (
+                            <input
+                                key={name}
+                                name={name}
+                                type={type}
+                                placeholder={placeholder}
+                                value={formData[name as keyof typeof formData]}
+                                onChange={handleChange}
+                                className="p-4 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-green-300 transition"
+                            />
+                        ))}
+                        <textarea
+                            name="details"
+                            placeholder="Additional Details"
+                            value={formData.details}
+                            onChange={handleChange}
+                            className="md:col-span-2 p-4 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-green-300 transition min-h-[120px]"
+                        />
+                        <button
+                            type="submit"
+                            className="md:col-span-2 bg-[#4b934b] text-white py-4 text-lg font-semibold rounded-xl hover:bg-[#3d7a3d] transition"
+                        >
+                            Submit Request
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>        
     );
 };
 

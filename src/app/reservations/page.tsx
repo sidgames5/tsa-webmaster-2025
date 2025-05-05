@@ -15,9 +15,9 @@ export default function Page() {
         }
     }
     return (
-        <div className="flex items-center justify-center flex-col h-[100vh-4rem)]">
+        <div className="flex flex-col items-center justify-start bg-[#fdf7f2] justify-center flex-col h-[100vh-4rem)]">
             <div
-                className="relative min-h-[50vh] w-[100vw] flex items-center justify-center align-middle"
+                className="relative min-h-[50vh] w-full flex items-center justify-center bg-fixed"
                 style={{
                     backgroundImage: "url('/images/B6.webp')",
                     backgroundSize: 'cover',
@@ -25,24 +25,24 @@ export default function Page() {
                 }}
             >
                 <div className="absolute inset-0 bg-black opacity-50"></div>
-                <h1 className="relative tangerine-bold text-8xl text-white">Reservations</h1>
+                <h1 className="relative tangerine-bold text-7xl md:text-8xl text-white">Reservations</h1>
             </div>
             
-            <div className="flex flex-col lg:flex-row items-start justify-between gap-12 px-6 py-12 bg-gradient-to-b from-white to-gray-100 mb-8 border-1 border-gray-300 rounded-2xl mt-8">
+            <div className="max-w-7xl w-full px-6 py-16 grid grid-cols-1 lg:grid-cols-[2fr_1px_1fr] gap-12">
                 <div> 
-                    <h2 className="dm-serif-text-regular-italic text-4xl md:text-5xl mb-6 text-gray-800">Book a table</h2>
-                    <form action={handleReserve} className="grid grid-cols-1 md:grid-cols-2 gap-4 w-2xl">
-                        <input type="text" id="name" name="name" className="p-2 border border-gray-300 rounded-md" placeholder='Name' required />
+                    <h2 className="dm-serif-text-regular-italic text-4xl md:text-5xl mb-6 text-gray-800 text-center">Book a table</h2>
+                    <form action={handleReserve} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-8 rounded-3xl shadow-lg border border-[#e6ded3]">
+                        <input type="text" id="name" name="name" className="p-3 rounded-lg border border-gray-300" placeholder='Name' required />
 
-                        <input type="number" id="guests" name="guests" min="1" max="20" className="p-2 border border-gray-300 rounded-md" placeholder='Number of guests' required />
+                        <input type="number" id="guests" name="guests" min="1" max="20" className="p-3 border border-gray-300 rounded-md" placeholder='Number of guests' required />
 
-                        <input type="date" id="date" name="date" className="p-2 border border-gray-300 rounded-md" required />
+                        <input type="date" id="date" name="date" className="p-3 border border-gray-300 rounded-md" required />
 
-                        <input type="time" id="time" name="time" className="p-2 border border-gray-300 rounded-md" required />
+                        <input type="time" id="time" name="time" className="p-3 border border-gray-300 rounded-md" required />
 
-                        <input type="email" id="email" name="email" className="col-span-2 p-2 border border-gray-300 rounded-md" placeholder='Email Address' required />
+                        <input type="email" id="email" name="email" className="col-span-2 p-3 border border-gray-300 rounded-md" placeholder='Email Address' required />
 
-                        <input type="comments" id="comments" name="comments" className="col-span-2 p-2 border border-gray-300 rounded-md" placeholder="Any other comments you want us to know ?  (e.g. allergies, birthdays, etc)..." />
+                        <input type="comments" id="comments" name="comments" className="col-span-2 p-3 border border-gray-300 rounded-md" placeholder="Any other comments you want us to know ?  (e.g. allergies, birthdays, etc)..." />
 
                         <button
                             type="submit"
@@ -52,8 +52,8 @@ export default function Page() {
                         </button>
                     </form>
                 </div>
-                <div className="w-[1px] h-full bg-black"></div>
-                <div className="mt-10 w-full max-w-md p-6 bg0white/70 border border-gray-200 rounded-2xl shadow-lg text-center">
+                <div className="w-[1px] h-[480px] bg-black"></div>
+                <div className="mt-24 w-full h-[300px] max-w-md p-6 bg0white/70 border border-gray-200 rounded-2xl shadow-lg text-center">
                     <h2 className="text-3xl font-semibold text-gray-800 mb-4">Need Help?</h2>
                     <p className="text-gray-600">We're happy to acccommodate special requests or answer any questions! Feel free to leave a comment in the form or contact us directly!</p>
                     <div className="mt-6 text-gray-700 border-2 p-2 rounded-2xl">
