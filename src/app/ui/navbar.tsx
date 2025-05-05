@@ -116,6 +116,7 @@ export default function Navbar() {
             <MobileNavLink href="/menu">Menu</MobileNavLink>
             <MobileNavLink href="/reservations">Reservations</MobileNavLink>
             <MobileNavLink href="/catering">Catering</MobileNavLink>
+            <MobileNavLink href="/merch">Merch</MobileNavLink>
           </motion.ul>
         )}
       </AnimatePresence>
