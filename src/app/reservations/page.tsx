@@ -15,7 +15,7 @@ export default function Page() {
         }
     }
     return (
-        <div className="flex flex-col items-center justify-start bg-[#fdf7f2] justify-center flex-col h-[100vh-4rem)]">
+        <div className="flex flex-col items-center justify-start bg-[#fdf7f2] h-[100vh-4rem)]">
             <div
                 className="relative min-h-[50vh] w-full flex items-center justify-center bg-fixed"
                 style={{
@@ -27,9 +27,9 @@ export default function Page() {
                 <div className="absolute inset-0 bg-black opacity-50"></div>
                 <h1 className="relative tangerine-bold text-7xl md:text-8xl text-white">Reservations</h1>
             </div>
-            
+
             <div className="max-w-7xl w-full px-6 py-16 grid grid-cols-1 lg:grid-cols-[2fr_1px_1fr] gap-12">
-                <div> 
+                <div>
                     <h2 className="dm-serif-text-regular-italic text-4xl md:text-5xl mb-6 text-gray-800 text-center">Book a table</h2>
                     <form action={handleReserve} className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-8 rounded-3xl shadow-lg border border-[#e6ded3]">
                         <input type="text" id="name" name="name" className="p-3 rounded-lg border border-gray-300" placeholder='Name' required />
@@ -47,7 +47,7 @@ export default function Page() {
                         <button
                             type="submit"
                             className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-700 transition duration-200 col-span-2"
-                            >
+                        >
                             Reserve Table
                         </button>
                     </form>
@@ -62,7 +62,7 @@ export default function Page() {
                     </div>
                 </div>
             </div>
-            
+
         </div>
     );
 }
