@@ -19,11 +19,11 @@ export default function Home() {
             id: 2,
             title: "Avocado Bloom Toast",
             description: "Sourdough, smashed avocado, heirloom tomatoes, microgreens.",
-            img: "/images/avocado_toast.jpeg",
+            img: "/images/avacado_toast.jpeg",
             ingredients: ["Sourdough", "Avocado", "Heirloom Tomatoes", "Microgreens", "Edible Flowers", "Sea Salt"],
             calories: 480,
             seasonal: false,
-            vegan: true
+            vegan: false
         },
         {
             id: 3,
