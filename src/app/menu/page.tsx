@@ -15,7 +15,7 @@ type MenuSection = {
 };
 
 export default function MenuPage() {
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+  const [expandedSection, setExpandedSection] = useState<string | null>("Starters");
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
   const menuSections: MenuSection[] = [
@@ -91,8 +91,10 @@ export default function MenuPage() {
   ];
 
   const toggleSection = (title: string) => {
-    setExpandedSection(expandedSection === title ? null : title);
-    setExpandedItem(null);
+    if (expandedSection !== title) {
+      setExpandedSection(title);
+      setExpandedItem(null);
+    }
   };
 
   const toggleItem = (itemName: string) => {
