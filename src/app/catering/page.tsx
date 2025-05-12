@@ -76,15 +76,15 @@ const CateringPage: React.FC = () => {
 
     return (
         <div className="font-serif text-[#2f2f2f] ">
-            <div className="py-32 bg-center bg-cover bg-no-repeat shadow-inner flex items-center justify-center bg-fixed"
+            <div className="relative min-h-[50vh] w-full flex items-center justify-center bg-cover bg-center bg-fixed"
                 style={{
                     backgroundImage: "url('https://cdn.pixabay.com/photo/2023/11/14/17/39/meal-8388203_1280.jpg')",
-                }}
-            >
-                <div className="bg-white/50 backdrop-blur-md rounded-xl p-10 max-w-4xl mx-auto text-center px-6">
-                    <h1 className="text-5xl font-bold text-[#4b3f2f] mb-4">Catering with Heart</h1>
-                    <p className="text-xl text-[#6e6256] max-w-2xl mx-auto">
-                        Let us bring the comfort of a vegetarian kitchen to your next special event.
+                }}>
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+                <div className="relative z-10 text-center px-4">
+                    <h1 className="text-7xl md:text-8xl font-bold text-white mb-4 tangerine-bold">Catering</h1>
+                    <p className="text-xl text-white/90 max-w-2xl mx-auto">
+                    Let us bring the comfort of a vegetarian kitchen to your next special event
                     </p>
                 </div>
             </div>
@@ -93,7 +93,7 @@ const CateringPage: React.FC = () => {
                 <div className="text-center mb-16"> 
                     <h1 className="text-5xl text-[#4b3f2f] tracking-white">Special Events</h1>
                     <p className="mt-4 text-[#7c6f5f] text-lg max-w-xl mx-auto">
-                        Whether it's an elegant wedding or an intimate, gathering, we provide unforgettable culinary experiences.
+                        Whether it&apos;s an elegant wedding or an intimate, gathering, we provide unforgettable culinary experiences.
                     </p>
                 </div>
                 <div className="max-w-6xl w-full px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
