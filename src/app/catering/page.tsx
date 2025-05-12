@@ -75,7 +75,7 @@ const CateringPage: React.FC = () => {
     ];
 
     return (
-        <div className="font-serif text-[#2f2f2f] ">
+        <div className=" text-[#2f2f2f] ">
             <div className="relative min-h-[50vh] w-full flex items-center justify-center bg-cover bg-center bg-fixed"
                 style={{
                     backgroundImage: "url('https://cdn.pixabay.com/photo/2023/11/14/17/39/meal-8388203_1280.jpg')",
