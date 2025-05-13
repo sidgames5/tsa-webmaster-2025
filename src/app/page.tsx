@@ -1,6 +1,10 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
     // Featured dishes data with expanded details
@@ -89,28 +93,214 @@ export default function Home() {
         }
     ];
 
-    // Testimonials
-    const testimonials = [
-        {
-            quote: "The most innovative plant-based cuisine I've ever experienced. Every bite was a revelation!",
-            author: "Jamie L., Food Critic",
-            role: "Local Guide"
-        },
-        {
-            quote: "My go-to spot for fresh, flavorful meals that make me feel good about what I'm eating.",
-            author: "Morgan T.",
-            role: "Regular Customer"
-        },
-        {
-            quote: "The seasonal tasting menu changed my perspective on vegetarian dining completely.",
-            author: "Alex R.",
-            role: "First-time Visitor"
-        }
+    // Testimonials state
+    const [reviews, setReviews] = useState([]);
+    const [formData, setFormData] = useState({
+        name: "",
+        message: "",
+        profileImage: null,
+    });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCameraAllowed, setIsCameraAllowed] = useState(false);
+    const [videoStream, setVideoStream] = useState(null);
+    const videoRef = useRef(null);
+    const [reviewsCleared, setReviewsCleared] = useState(false);
+    const avatarList = [
+        "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
+        "https://cdn-icons-png.flaticon.com/512/4140/4140048.png",
+        "https://cdn-icons-png.flaticon.com/512/921/921071.png",
+        "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+        "https://cdn-icons-png.flaticon.com/128/2202/2202112.png",
+        "https://cdn-icons-png.flaticon.com/128/1256/1256650.png",
+        "https://cdn-icons-png.flaticon.com/128/15537/15537905.png",
+        "https://cdn-icons-png.flaticon.com/128/11498/11498793.png",
+        "https://cdn-icons-png.flaticon.com/128/16683/16683419.png",
+        "https://cdn-icons-png.flaticon.com/128/3641/3641988.png",
+        "https://cdn-icons-png.flaticon.com/128/2920/2920072.png",
+        "https://cdn-icons-png.flaticon.com/128/3135/3135823.png",
+        "https://cdn-icons-png.flaticon.com/128/4015/4015967.png",
+        "https://cdn-icons-png.flaticon.com/128/4015/4015994.png",
+        "https://cdn-icons-png.flaticon.com/128/484/484945.png",
+        "https://cdn-icons-png.flaticon.com/128/15375/15375450.png",
+        "https://cdn-icons-png.flaticon.com/128/6705/6705530.png"
     ];
+    const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
+    const constraintsRef = useRef(null);
+    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+    const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
+    const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
+    const handleAdminLogin = () => {
+        if (adminCredentials.username === "admin" && adminCredentials.password === "LeafLogicAdmin123") {
+            setIsAdminAuthenticated(true);
+            setIsAdminModalOpen(false);
+            setReviews([]);
+            localStorage.removeItem("reviews");
+            alert("All reviews have been cleared.");
+        } else {
+            alert("Invalid credentials.");
+        }
+    };
+
+    const clearReviews = async () => {
+        if (!isAdminAuthenticated) {
+            setIsAdminModalOpen(true);
+            return;
+        }
+
+        if (!window.confirm("Are you sure you want to clear all reviews?")) return;
+
+        try {
+            const response = await fetch("/api/admin/reviews", {
+                method: "DELETE",
+            });
+
+            if (response.ok) {
+                setReviews([]);
+                localStorage.setItem("reviewsCleared", "true");
+                localStorage.removeItem("reviews");
+                alert("All testimonials cleared.");
+            } else {
+                alert("Failed to clear testimonials.");
+            }
+        } catch (error) {
+            console.error("Error clearing reviews:", error);
+            alert("Error clearing testimonials.");
+        }
+    };
+
+    useEffect(() => {
+        const reviewsClearedFlag = localStorage.getItem("reviewsCleared");
+        if (reviewsClearedFlag === "true") {
+            setReviews([]);
+            return;
+        }
+
+        const storedReviews = localStorage.getItem("reviews");
+        if (storedReviews) {
+            setReviews(JSON.parse(storedReviews));
+        } else {
+            fetch("/api/get-reviews")
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.reviews && data.reviews.length > 0) {
+                        setReviews(data.reviews);
+                        localStorage.setItem("reviews", JSON.stringify(data.reviews));
+                    } else {
+                        setReviews([]);
+                    }
+                });
+        }
+    }, []);
+
+    const resetReviews = () => {
+        localStorage.removeItem("reviewsCleared");
+        fetch("/api/get-reviews")
+            .then((res) => res.json())
+            .then((data) => {
+                setReviews(data.reviews || []);
+                localStorage.setItem("reviews", JSON.stringify(data.reviews || []));
+            })
+            .catch((error) => {
+                console.error("Error fetching reviews after reset:", error);
+            });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!formData.message.trim()) {
+            alert("Please write a testimonial.");
+            return;
+        }
+
+        const form = new FormData();
+        form.append("name", formData.name.trim());
+        form.append("message", formData.message.trim());
+
+        if (formData.profileImage) {
+            form.append("profileImage", formData.profileImage);
+        } else if (formData.photo) {
+            form.append("photo", formData.photo);
+        }
+
+        try {
+            const res = await fetch("/api/submit-review", {
+                method: "POST",
+                body: form,
+            });
+
+            const result = await res.json();
+
+            if (result.success) {
+                setReviews((prev) => [result.review, ...prev]);
+                localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews]));
+            } else {
+                alert(result.error || "Submission failed.");
+            }
+        } catch (err) {
+            console.error("Error submitting review:", err);
+            alert("An error occurred during submission.");
+        }
+
+        setFormData({ name: "", message: "", photo: null, profileImage: null });
+        closeModal();
+    };
+
+    const handleImageError = (e) => {
+        e.target.src = defaultAvatar;
+    };
+
+    const openModal = () => {
+        setIsModalOpen(true);
+        setIsCameraAllowed(false);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        if (videoStream) {
+            videoStream.getTracks().forEach((track) => track.stop());
+            setVideoStream(null);
+        }
+    };
+
+    const handleCameraPermission = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            setIsCameraAllowed(true);
+            setVideoStream(stream);
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+            }
+        } catch (err) {
+            alert("Camera access denied or not available.");
+        }
+    };
+
+    const handleCapture = () => {
+        const canvas = document.createElement("canvas");
+        const video = videoRef.current;
+        if (!video) return;
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext("2d").drawImage(video, 0, 0);
+
+        canvas.toBlob((blob) => {
+            if (blob) {
+                setFormData((prev) => ({ ...prev, profileImage: blob }));
+            }
+        }, "image/jpeg");
+    };
 
     return (
-        <main className="flex flex-col items-center">
-            {/* Hero Section with your original background image */}
+        <div className="relative flex flex-col justify-center items-center overflow-hidden">
+            {/* Hero Section */}
             <section
                 className="relative w-full min-h-[50vh] max-h-[110vh] flex items-center justify-center bg-cover bg-center"
                 style={{
@@ -130,7 +320,8 @@ export default function Home() {
                         <Link href="/reservations">
                             <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full text-lg font-medium transition-all duration-300 cursor-pointer">
                                 Reserve a Table
-                            </button></Link>
+                            </button>
+                        </Link>
                         <Link href="/menu">
                             <button className="bg-transparent border-2 border-white hover:bg-white/20 text-white px-8 py-3 rounded-full text-lg font-medium transition-all duration-300 cursor-pointer">
                                 View Menu
@@ -228,29 +419,204 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Testimonials Section */}
-            <section className="w-full py-16 px-6 md:px-20 bg-gray-50">
-                <div className="max-w-6xl mx-auto text-center">
-                    <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-12">
-                        Dining Experiences
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {testimonials.map((testimonial, index) => (
-                            <div key={index} className="bg-white p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-                                <div className="flex justify-center text-amber-400 text-2xl mb-4">
-                                    {[...Array(5)].map((_, i) => (
-                                        <svg key={i} className="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                                        </svg>
-                                    ))}
+            {/* Enhanced Testimonials Section */}
+            <section className="w-full py-16 px-6 md:px-20 bg-gradient-to-r from-green-100 via-stone-50 to-blue-100" id="testimonials">
+                <div className="max-w-6xl mx-auto">
+                    <motion.h2 
+                        className="text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500"
+                        initial={{ opacity: 0, y: -30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                    >
+                        What Do Our Users Say?
+                    </motion.h2>
+                    
+                    <div className="mb-12 flex justify-center items-center gap-10">
+                        <motion.button
+                            onClick={openModal}
+                            className="bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-full text-lg"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            Add a Review
+                        </motion.button>
+                        <button
+                            onClick={clearReviews}
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full"
+                        >
+                            Clear Testimonial History
+                        </button>
+                    </div>
+                    
+                    {isModalOpen && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 bg-opacity-60 z-50" ref={constraintsRef}>
+                            <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl h-fit max-h-[85vh] overflow-y-auto"
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale:0.9, opacity: 0 }}
+                                drag
+                                dragConstraints={constraintsRef}
+                            >
+                                <h3 className="text-3xl font-bold mb-4 text-gray-800 text-center">Submit Your Review</h3>
+                                <form onSubmit={handleSubmit} className="space-y-5">
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        placeholder="Your name (optional)"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-800"
+                                    />
+                                    <textarea
+                                        name="message"
+                                        placeholder="Write your testimonial..."
+                                        value={formData.message}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full p-3 border border-gray-300 rounded-md h-28 resize-none focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800"
+                                    />
+                                    
+                                    <div className="space-y-2">
+                                        <label className="block font-medium text-gray-700">Choose an Avatar:</label>
+                                        <div className="grid grid-cols-4 gap-3">
+                                            <div className="col-span-4">
+                                                <label className="block mb-2 text-sm font-medium text-gray-700">Choose an Avatar</label>
+                                                <div className="grid grid-cols-7 gap-4 mb-4">
+                                                    {avatarList.map((avatar, index) => (
+                                                        <button
+                                                            key={index}
+                                                            type="button"
+                                                            className={`rounded-full overflow-hidden border-4 ${
+                                                                formData.photo === avatar ? "border-green-500" : "border-transparent"
+                                                            }`}
+                                                            onClick={() => setFormData({ ...formData, photo: avatar })}
+                                                        >
+                                                            <img 
+                                                                src={avatar}
+                                                                alt={`Avatar ${index + 1}`} 
+                                                                className="w-16 h-16 object-cover" 
+                                                                onError={handleImageError}
+                                                            />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            
+                                            {formData.photo && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    className="flex flex-col items-center gap-2 pt-4 col-span-4"
+                                                >
+                                                    <span className="text-sm text-gray-500">Selected Avatar</span>
+                                                    <img
+                                                        src={formData.photo}
+                                                        alt="Selected avatar"
+                                                        className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
+                                                        onError={handleImageError}
+                                                    />
+                                                </motion.div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex justify-end space-x-4">
+                                        <button
+                                            type="button"
+                                            onClick={closeModal}
+                                            className="bg-gray-300 py-2 px-4 rounded-md hover:bg-gray-400"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700"
+                                        >
+                                            Submit Review
+                                        </button>
+                                    </div>
+                                </form>
+                            </motion.div>
+                        </div>
+                    )}
+                    
+                    {isAdminModalOpen && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 z-50">
+                            <motion.div
+                                className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md"
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                            >
+                                <h3 className="text-xl font-bold mb-4 text-gray-800 text-center">Admin Login</h3>
+                                <input
+                                    type="text"
+                                    name="username"
+                                    placeholder="Username"
+                                    value={adminCredentials.username}
+                                    onChange={(e) =>
+                                        setAdminCredentials({ ...adminCredentials, username: e.target.value })
+                                    }
+                                    className="w-full mb-3 p-3 border border-gray-300 rounded-md text-gray-800"
+                                />
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    value={adminCredentials.password}
+                                    onChange={(e) =>
+                                        setAdminCredentials({ ...adminCredentials, password: e.target.value })
+                                    }
+                                    className="w-full mb-4 p-3 border border-gray-300 rounded-md text-gray-800"
+                                />
+                                <div className="flex justify-between">
+                                    <button
+                                        onClick={() => setIsAdminModalOpen(false)}
+                                        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleAdminLogin}
+                                        className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+                                    >
+                                        Log In
+                                    </button>
                                 </div>
-                                <p className="text-gray-700 italic text-lg mb-6">&quot;{testimonial.quote}&quot;</p>
-                                <div className="border-t border-gray-100 pt-4">
-                                    <p className="font-semibold text-gray-800">{testimonial.author}</p>
-                                    <p className="text-sm text-gray-500">{testimonial.role}</p>
-                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                    
+                    <div className="max-h-[500px] overflow-y-auto px-4">
+                        {reviews.length === 0 ? (
+                            <p className="text-gray-500 text-center">No reviews yet</p>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mt-2">
+                                {reviews.map((review, index) => (
+                                    <motion.div
+                                        key={index}
+                                        className="bg-stone-100 text-black shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 border-green-400"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                                        whileHover={{ scale: 1.04 }}
+                                    >
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <img
+                                                src={review.image || defaultAvatar}
+                                                alt="User avatar"
+                                                className="w-14 h-14 rounded-full object-cover border border-gray-300"
+                                            />
+                                            <h3 className="text-gray-800 text-lg font-semibold">
+                                                {review.name || "Anonymous"}
+                                            </h3>
+                                        </div>
+                                        <p className="text-gray-700 text-base break-words whitespace-pre-wrap">{review.message}</p>
+                                    </motion.div>
+                                ))}
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
             </section>
@@ -276,6 +642,6 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     );
 }
