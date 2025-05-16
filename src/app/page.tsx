@@ -130,15 +130,33 @@ export default function Home() {
     const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
     const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-    const handleAdminLogin = () => {
-        if (adminCredentials.username === "admin" && adminCredentials.password === "LeafLogicAdmin123") {
-            setIsAdminAuthenticated(true);
-            setIsAdminModalOpen(false);
-            setReviews([]);
-            localStorage.removeItem("reviews");
-            alert("All reviews have been cleared.");
-        } else {
-            alert("Invalid credentials.");
+    const handleAdminLogin = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/admin/clear-reviews', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: adminCredentials.username,
+                    password: adminCredentials.password
+                })
+            });
+    
+            const result = await response.json();
+            
+            if (result.success) {
+                setIsAdminAuthenticated(true);
+                setIsAdminModalOpen(false);
+                setReviews([]);
+                localStorage.removeItem("reviews");
+                alert("All reviews have been cleared.");
+            } else {
+                alert(result.error || "Invalid credentials");
+            }
+        } catch (error) {
+            console.error("Admin login error:", error);
+            alert("Failed to connect to server");
         }
     };
 
@@ -213,45 +231,47 @@ export default function Home() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+      
         if (!formData.message.trim()) {
-            alert("Please write a testimonial.");
-            return;
+          alert("Please write a testimonial.");
+          return;
         }
-
-        const form = new FormData();
-        form.append("name", formData.name.trim());
-        form.append("message", formData.message.trim());
-
-        if (formData.profileImage) {
-            form.append("profileImage", formData.profileImage);
-        } else if (formData.photo) {
-            form.append("photo", formData.photo);
-        }
-
+      
         try {
-            const res = await fetch("/api/submit-review", {
-                method: "POST",
-                body: form,
-            });
-
-            const result = await res.json();
-
-            if (result.success) {
-                setReviews((prev) => [result.review, ...prev]);
-                localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews]));
-            } else {
-                alert(result.error || "Submission failed.");
-            }
+          const response = await fetch("http://localhost:5000/submit-review", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              name: formData.name.trim(),
+              message: formData.message.trim(),
+              photo: formData.photo || null
+            })
+          });
+      
+          // First check if response is OK
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server error: ${errorText}`);
+          }
+      
+          // Then parse as JSON
+          const data = await response.json();
+          
+          // Update state
+          setReviews((prev) => [data.review, ...prev]);
+          localStorage.setItem("reviews", JSON.stringify([data.review, ...reviews]));
+          
         } catch (err) {
-            console.error("Error submitting review:", err);
-            alert("An error occurred during submission.");
+          console.error("Submission error:", err);
+          alert(`Error: ${err.message}`);
+        } finally {
+          setFormData({ name: "", message: "", photo: null });
+          closeModal();
         }
-
-        setFormData({ name: "", message: "", photo: null, profileImage: null });
-        closeModal();
     };
-
     const handleImageError = (e) => {
         e.target.src = defaultAvatar;
     };

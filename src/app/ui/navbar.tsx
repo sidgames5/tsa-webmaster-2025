@@ -159,7 +159,7 @@ function MobileNavLink({ href, children }: { href: string; children: React.React
         >
             <Link
                 href={href}
-                className="text-white text-xl font-medium block py-2"
+                className="text-white text-xl text-extrabold font-medium block py-2"
             >
                 {children}
             </Link>
@@ -220,13 +220,14 @@ function DesktopNavbar() {
     return (
         <nav className="bg-gray-900 shadow-md">
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-                <Link href="/" className="text-white text-2xl font-bold tracking-tight">
+                <Link href="/" className="text-white text-2xl font-extrabold tracking-tight">
                     Sprout & Spoon
                 </Link>
                 <div className="space-x-6">
                     <DesktopNavLink href="/menu">Menu</DesktopNavLink>
                     <DesktopNavLink href="/reservations">Reservations</DesktopNavLink>
                     <DesktopNavLink href="/catering">Catering</DesktopNavLink>
+                    <DesktopNavLink href="/merch">Merch</DesktopNavLink>
                 </div>
             </div>
         </nav>

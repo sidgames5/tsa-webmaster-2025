@@ -26,18 +26,21 @@ const menuSections: MenuSection[] = [
         description: "Baked cremini mushrooms filled with herbs and vegan cheese.",
         price: "$9",
         ingredients: ["Cremini mushrooms", "Vegan cheese", "Fresh herbs", "Garlic", "Olive oil"],
+        image: "https://images.unsplash.com/photo-1622268805718-ca073548d4ad?q=80&w=2610&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       },
       {
         name: "Avocado Toast",
         description: "Rustic bread topped with smashed avocado, radish, and sprouts.",
         price: "$7",
         ingredients: ["Sourdough bread", "Avocado", "Radish", "Microgreens", "Lemon zest"],
+        image: "https://cdn.pixabay.com/photo/2020/02/06/12/36/breakfast-4824116_1280.jpg",
       },
       {
         name: "Seasonal Soup",
         description: "A rotating selection of fresh, locally-sourced soups.",
         price: "$8",
         ingredients: ["Seasonal vegetables", "Vegetable broth", "Fresh herbs"],
+        image: "https://cdn.pixabay.com/photo/2023/05/27/13/49/soup-8021564_1280.jpg",
       },
     ],
   },
@@ -49,18 +52,21 @@ const menuSections: MenuSection[] = [
         description: "Layers of roasted veggies, plant-based cheese, and marinara sauce.",
         price: "$16",
         ingredients: ["Zucchini", "Eggplant", "Bell peppers", "Vegan ricotta", "Lasagna noodles"],
+        image: "https://plus.unsplash.com/premium_photo-1726783346698-aeeee98bd358?q=80&w=2653&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       },
       {
-        name: "Chickpea Buddha Bowl",
-        description: "Quinoa, roasted chickpeas, kale, and tahini dressing.",
+        name: "Buddha Bowl",
+        description: "Cheese, Onion, kale, and peppers.",
         price: "$14",
-        ingredients: ["Chickpeas", "Quinoa", "Kale", "Tahini", "Lemon", "Cucumber"],
+        ingredients: ["Cheese", "Onion", "Kale", "Pepper", "Lemon", "Cucumber"],
+        image: "https://cdn.pixabay.com/photo/2018/04/21/03/47/food-3337621_1280.jpg",
       },
       {
         name: "Stuffed Acorn Squash",
         description: "Wild rice, cranberries, and pecans in a roasted squash half.",
         price: "$18",
         ingredients: ["Acorn squash", "Wild rice", "Dried cranberries", "Pecans", "Sage"],
+        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
       },
     ],
   },
@@ -72,18 +78,21 @@ const menuSections: MenuSection[] = [
         description: "Decadent dark chocolate cake with coconut cream frosting.",
         price: "$9",
         ingredients: ["Dark chocolate", "Coconut cream", "Almond flour", "Maple syrup"],
+        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
       },
       {
         name: "Fruit Tart",
         description: "Crisp almond crust filled with vanilla custard and seasonal fruit.",
         price: "$8",
         ingredients: ["Almond flour", "Coconut milk", "Vanilla bean", "Seasonal berries"],
+        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
       },
       {
         name: "Chia Pudding",
         description: "Chia seeds soaked in coconut milk with a touch of maple syrup.",
         price: "$7",
         ingredients: ["Chia seeds", "Coconut milk", "Maple syrup", "Fresh fruit"],
+        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
       },
     ],
   },
@@ -254,6 +263,11 @@ export default function MerchPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.items.map((item) => (
                   <div key={item.name} className="bg-white rounded-lg shadow-md p-6">
+                    {item.image && (
+                      <div className="h-48 w-full relative mb-4">
+                        <img src={item.image} alt={item.name} layout="fill" objectFit="cover" className="rounded" />
+                      </div>
+                    )}
                     <h4 className="text-xl font-semibold text-gray-900 mb-2">{item.name}</h4>
                     <p className="text-gray-600 mb-3">{item.description}</p>
                     <div className="flex justify-between items-center">
