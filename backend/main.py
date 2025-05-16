@@ -26,7 +26,7 @@ TOKEN_EXPIRATION_HOURS = 1
 
 CORS(app)
 
-# Token storage (in production, use a database)
+# Token storage
 active_tokens = {}
 
 # Making sure the REVIEW_FILE path exists

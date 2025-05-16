@@ -130,10 +130,10 @@ const products: Product[] = [
   },
   {
     id: 4,
-    name: "Bamboo Utensil Set",
-    price: "$22.99",
-    image: "https://images.unsplash.com/photo-1583947581924-a6d188504e89",
-    description: "Eco-friendly portable cutlery set",
+    name: "Bamboo Plates 5pcs",
+    price: "$11.99",
+    image: "https://cdn.pixabay.com/photo/2020/05/15/09/35/dish-wooden-5172967_1280.jpg",
+    description: "Eco-friendly plate set",
   },
 ];
 
