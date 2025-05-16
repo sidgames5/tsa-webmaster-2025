@@ -24,21 +24,21 @@ const menuSections: MenuSection[] = [
       {
         name: "Stuffed Mushrooms",
         description: "Baked cremini mushrooms filled with herbs and vegan cheese.",
-        price: "$9",
+        price: "$8.99",
         ingredients: ["Cremini mushrooms", "Vegan cheese", "Fresh herbs", "Garlic", "Olive oil"],
         image: "https://images.unsplash.com/photo-1622268805718-ca073548d4ad?q=80&w=2610&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       },
       {
         name: "Avocado Toast",
         description: "Rustic bread topped with smashed avocado, radish, and sprouts.",
-        price: "$7",
+        price: "$6.99",
         ingredients: ["Sourdough bread", "Avocado", "Radish", "Microgreens", "Lemon zest"],
         image: "https://cdn.pixabay.com/photo/2020/02/06/12/36/breakfast-4824116_1280.jpg",
       },
       {
         name: "Seasonal Soup",
         description: "A rotating selection of fresh, locally-sourced soups.",
-        price: "$8",
+        price: "$7.99",
         ingredients: ["Seasonal vegetables", "Vegetable broth", "Fresh herbs"],
         image: "https://cdn.pixabay.com/photo/2023/05/27/13/49/soup-8021564_1280.jpg",
       },
@@ -50,23 +50,23 @@ const menuSections: MenuSection[] = [
       {
         name: "Grilled Vegetable Lasagna",
         description: "Layers of roasted veggies, plant-based cheese, and marinara sauce.",
-        price: "$16",
+        price: "$11.99",
         ingredients: ["Zucchini", "Eggplant", "Bell peppers", "Vegan ricotta", "Lasagna noodles"],
         image: "https://plus.unsplash.com/premium_photo-1726783346698-aeeee98bd358?q=80&w=2653&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       },
       {
         name: "Buddha Bowl",
         description: "Cheese, Onion, kale, and peppers.",
-        price: "$14",
+        price: "$12.99",
         ingredients: ["Cheese", "Onion", "Kale", "Pepper", "Lemon", "Cucumber"],
         image: "https://cdn.pixabay.com/photo/2018/04/21/03/47/food-3337621_1280.jpg",
       },
       {
         name: "Wild Rice Pilaf",
-        description: "Wild rice and sautéed vegetables in a single dish.",
-        price: "$18",
-        ingredients: ["Acorn squash", "Wild rice", "Dried cranberries", "Pecans", "Sage"],
-        image: "https://cd.pixabay.com/photo/WildRicePilaf.jpg",
+        description: "Wild rice and vegetables in a single dish.",
+        price: "$14.99",
+        ingredients: ["Bell peppers", "Wild rice", "Onions", "Cilantro"],
+        image: "https://cdn.pixabay.com/photo/2018/09/24/21/59/food-3700930_1280.jpg",
       },
     ],
   },
@@ -76,21 +76,21 @@ const menuSections: MenuSection[] = [
       {
         name: "Vegan Chocolate Cake",
         description: "Decadent dark chocolate cake with coconut cream frosting.",
-        price: "$9",
+        price: "$8.99",
         ingredients: ["Dark chocolate", "Coconut cream", "Almond flour", "Maple syrup"],
         image: "https://cdn.pixabay.com/photo/2017/01/11/11/33/cake-1971552_1280.jpg",
       },
       {
         name: "Fruit Tart",
         description: "Crisp almond crust filled with vanilla custard and seasonal fruit.",
-        price: "$8",
+        price: "$7.99",
         ingredients: ["Almond flour", "Coconut milk", "Vanilla bean", "Seasonal berries"],
         image: "https://cdn.pixabay.com/photo/2016/03/27/19/23/tart-1283822_1280.jpg",
       },
       {
         name: "Chia Pudding",
         description: "Chia seeds soaked in coconut milk with a touch of maple syrup.",
-        price: "$7",
+        price: "$6.99",
         ingredients: ["Chia seeds", "Coconut milk", "Maple syrup", "Fresh fruit"],
         image: "https://cdn.pixabay.com/photo/2020/07/18/11/20/chia-5416921_1280.jpg",
       },
@@ -116,15 +116,15 @@ const products: Product[] = [
   },
   {
     id: 2,
-    name: "Reusable Shopping Tote",
-    price: "$15.99",
-    image: "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d",
-    description: "Durable canvas tote for everyday use",
+    name: "Bamboo Cooking Utensils",
+    price: "$22.99",
+    image: "https://cdn.pixabay.com/photo/2018/02/22/15/41/wood-3173282_1280.jpg",
+    description: "Durable and eco-friendly cooking utensils.",
   },
   {
     id: 3,
     name: "Ceramic Coffee Mug",
-    price: "$18.99",
+    price: "$14.99",
     image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38",
     description: "Handcrafted mug with comfortable grip",
   },
@@ -241,7 +241,7 @@ export default function MerchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-amber-50">
       <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -259,7 +259,7 @@ export default function MerchPage() {
           </motion.h2>
           {menuSections.map((section) => (
             <div key={section.title} className="mb-8">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-2">{section.title}</h3>
+              <h3 className="text-3xl p-2 font-semibold bg-gradient-to-r from-green-200 to-green-800 text-transparent bg-clip-text mb-2">{section.title}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.items.map((item) => (
                   <div key={item.name} className="bg-white rounded-lg shadow-md p-6 h-[400px]">
@@ -268,12 +268,12 @@ export default function MerchPage() {
                         <img 
                           src={item.image} 
                           alt={item.name} 
-                          className="rounded-2xl max-h-[200px] max-w-[300px] ml-7 mt-3" />
+                          className="rounded-2xl max-h-[200px] max-w-[300px] ml-7 mt-3 border-2 border-green-600" />
                       </div>
                     )}
                     <h4 className="text-xl font-semibold text-gray-900 mb-2">{item.name}</h4>
-                    <p className="text-gray-600 mb-3">{item.description}</p>
-                    <div className="flex justify-between items-center">
+                    <p className="text-gray-600 mb-3 ml-7 mr-7">{item.description}</p>
+                    <div className="flex justify-between items-center ml-20 mr-7">
                       <span className="text-lg font-bold text-gray-900">{item.price}</span>
                       <button
                         onClick={() => addToFoodCart(item)}

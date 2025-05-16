@@ -149,7 +149,7 @@ const CateringPage: React.FC = () => {
             </section>
                 {/* Contact Form */}
                 <div className="bg-[#f5f9f4] py-20">
-                <div className="max-w-4xl mx-auto px-6">
+                <div className="max-w-6xl mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-[#3e3e3e] mb-10">Request a Quote</h2>
                     <form action={handleCateringSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {[

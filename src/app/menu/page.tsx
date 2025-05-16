@@ -20,76 +20,75 @@ export default function MenuPage() {
 
     const menuSections: MenuSection[] = [
         {
-            title: "Starters",
-            items: [
-                {
-                    name: "Stuffed Mushrooms",
-                    description: "Baked cremini mushrooms filled with herbs and vegan cheese.",
-                    price: "$9",
-                    ingredients: ["Cremini mushrooms", "Vegan cheese", "Fresh herbs", "Garlic", "Olive oil"]
-                },
-                {
-                    name: "Avocado Toast",
-                    description: "Rustic bread topped with smashed avocado, radish, and sprouts.",
-                    price: "$7",
-                    ingredients: ["Sourdough bread", "Avocado", "Radish", "Microgreens", "Lemon zest"]
-                },
-                {
-                    name: "Seasonal Soup",
-                    description: "A rotating selection of fresh, locally-sourced soups.",
-                    price: "$8",
-                    ingredients: ["Seasonal vegetables", "Vegetable broth", "Fresh herbs"]
-                }
-            ]
+          title: "Starters",
+          items: [
+            {
+              name: "Stuffed Mushrooms",
+              description: "Baked cremini mushrooms filled with herbs and vegan cheese.",
+              price: "$8.99",
+              ingredients: ["Cremini mushrooms", "Vegan cheese", "Fresh herbs", "Garlic", "Olive oil"],
+            },
+            {
+              name: "Avocado Toast",
+              description: "Rustic bread topped with smashed avocado, radish, and sprouts.",
+              price: "$6.99",
+              ingredients: ["Sourdough bread", "Avocado", "Radish", "Microgreens", "Lemon zest"],
+            },
+            {
+              name: "Seasonal Soup",
+              description: "A rotating selection of fresh, locally-sourced soups.",
+              price: "$7.99",
+              ingredients: ["Seasonal vegetables", "Vegetable broth", "Fresh herbs"],
+            },
+          ],
         },
         {
-            title: "Mains",
-            items: [
-                {
-                    name: "Grilled Vegetable Lasagna",
-                    description: "Layers of roasted veggies, plant-based cheese, and marinara sauce.",
-                    price: "$16",
-                    ingredients: ["Zucchini", "Eggplant", "Bell peppers", "Vegan ricotta", "Lasagna noodles"]
-                },
-                {
-                    name: "Chickpea Buddha Bowl",
-                    description: "Quinoa, roasted chickpeas, kale, and tahini dressing.",
-                    price: "$14",
-                    ingredients: ["Chickpeas", "Quinoa", "Kale", "Tahini", "Lemon", "Cucumber"]
-                },
-                {
-                    name: "Stuffed Acorn Squash",
-                    description: "Wild rice, cranberries, and pecans in a roasted squash half.",
-                    price: "$18",
-                    ingredients: ["Acorn squash", "Wild rice", "Dried cranberries", "Pecans", "Sage"]
-                }
-            ]
+          title: "Mains",
+          items: [
+            {
+              name: "Grilled Vegetable Lasagna",
+              description: "Layers of roasted veggies, plant-based cheese, and marinara sauce.",
+              price: "$11.99",
+              ingredients: ["Zucchini", "Eggplant", "Bell peppers", "Vegan ricotta", "Lasagna noodles"],
+            },
+            {
+              name: "Buddha Bowl",
+              description: "Cheese, Onion, kale, and peppers.",
+              price: "$12.99",
+              ingredients: ["Cheese", "Onion", "Kale", "Pepper", "Lemon", "Cucumber"],
+            },
+            {
+              name: "Wild Rice Pilaf",
+              description: "Wild rice and vegetables in a single dish.",
+              price: "$14.99",
+              ingredients: ["Bell peppers", "Wild rice", "Onions", "Cilantro"],
+            },
+          ],
         },
         {
-            title: "Desserts",
-            items: [
-                {
-                    name: "Vegan Chocolate Cake",
-                    description: "Decadent dark chocolate cake with coconut cream frosting.",
-                    price: "$9",
-                    ingredients: ["Dark chocolate", "Coconut cream", "Almond flour", "Maple syrup"]
-                },
-                {
-                    name: "Fruit Tart",
-                    description: "Crisp almond crust filled with vanilla custard and seasonal fruit.",
-                    price: "$8",
-                    ingredients: ["Almond flour", "Coconut milk", "Vanilla bean", "Seasonal berries"]
-                },
-                {
-                    name: "Chia Pudding",
-                    description: "Chia seeds soaked in coconut milk with a touch of maple syrup.",
-                    price: "$7",
-                    ingredients: ["Chia seeds", "Coconut milk", "Maple syrup", "Fresh fruit"]
-                }
-            ]
-        }
-    ];
-
+          title: "Desserts",
+          items: [
+            {
+              name: "Vegan Chocolate Cake",
+              description: "Decadent dark chocolate cake with coconut cream frosting.",
+              price: "$8.99",
+              ingredients: ["Dark chocolate", "Coconut cream", "Almond flour", "Maple syrup"],
+            },
+            {
+              name: "Fruit Tart",
+              description: "Crisp almond crust filled with vanilla custard and seasonal fruit.",
+              price: "$7.99",
+              ingredients: ["Almond flour", "Coconut milk", "Vanilla bean", "Seasonal berries"],
+            },
+            {
+              name: "Chia Pudding",
+              description: "Chia seeds soaked in coconut milk with a touch of maple syrup.",
+              price: "$6.99",
+              ingredients: ["Chia seeds", "Coconut milk", "Maple syrup", "Fresh fruit"],
+            },
+          ],
+        },
+      ];
     const toggleSection = (title: string) => {
         if (expandedSection !== title) {
             setExpandedSection(title);

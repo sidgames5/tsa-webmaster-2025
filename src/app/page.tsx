@@ -7,7 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
-    // Featured dishes data with expanded details
+    const API_BASE_URL = "http://localhost:5000/api";
+    
     const featuredDishes = [
         {
             id: 1,
@@ -41,7 +42,6 @@ export default function Home() {
         }
     ];
 
-    // Commitment items with SVG icons
     const commitments = [
         {
             text: "Locally Sourced Ingredients",
@@ -93,18 +93,19 @@ export default function Home() {
         }
     ];
 
-    // Testimonials state
     const [reviews, setReviews] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
         message: "",
-        profileImage: null,
+        photo: null,
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isCameraAllowed, setIsCameraAllowed] = useState(false);
-    const [videoStream, setVideoStream] = useState(null);
-    const videoRef = useRef(null);
-    const [reviewsCleared, setReviewsCleared] = useState(false);
+    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+    const [adminCredentials, setAdminCredentials] = useState({ 
+        username: "", 
+        password: "" 
+    });
+
     const avatarList = [
         "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
         "https://cdn-icons-png.flaticon.com/512/4140/4140048.png",
@@ -125,15 +126,70 @@ export default function Home() {
         "https://cdn-icons-png.flaticon.com/128/6705/6705530.png"
     ];
     const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
-    const constraintsRef = useRef(null);
-    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-    const [adminCredentials, setAdminCredentials] = useState({ username: "", password: "" });
-    const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+
+    useEffect(() => {
+        const loadReviews = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/reviews`);
+                if (!response.ok) throw new Error("Failed to fetch reviews");
+                
+                const data = await response.json();
+                setReviews(data);
+                localStorage.setItem("reviews", JSON.stringify(data));
+            } catch (error) {
+                console.error("Error loading reviews:", error);
+                const storedReviews = localStorage.getItem("reviews");
+                if (storedReviews) setReviews(JSON.parse(storedReviews));
+            }
+        };
+
+        loadReviews();
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!formData.message.trim()) {
+            alert("Please write a testimonial.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/submit-review`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: formData.name.trim(),
+                    message: formData.message.trim(),
+                    photo: formData.photo || null
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || "Submission failed");
+            }
+
+            const result = await response.json();
+            setReviews(prev => [result.review, ...prev]);
+            localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews]));
+            
+        } catch (error) {
+            console.error("Submission error:", error);
+            alert(error.message);
+        } finally {
+            setFormData({ name: "", message: "", photo: null });
+            setIsModalOpen(false);
+        }
+    };
 
     const handleAdminLogin = async () => {
         try {
-            const response = await fetch('http://localhost:5000/admin/login', {
-                method: 'POST',
+            // First verify credentials
+            const loginResponse = await fetch(`${API_BASE_URL}/admin/login`, {
+                method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -143,208 +199,67 @@ export default function Home() {
                 })
             });
     
-            const result = await response.json();
-            
-            if (result.success) {
-                // Store the token securely (HttpOnly cookie would be better)
-                localStorage.setItem('adminToken', result.token);
-                setIsAdminAuthenticated(true);
-                setIsAdminModalOpen(false);
-                alert("Admin login successful");
-            } else {
-                alert(result.error || "Invalid credentials");
+            if (!loginResponse.ok) {
+                const error = await loginResponse.json();
+                throw new Error(error.error || "Login failed");
             }
-        } catch (error) {
-            console.error("Admin login error:", error);
-            alert("Failed to connect to server");
-        }
-    };
-
-    const clearReviews = async () => {
-        const token = localStorage.getItem('adminToken');
-        if (!token) {
-            setIsAdminModalOpen(true);
-            return;
-        }
     
-        try {
-            const response = await fetch('http://localhost:5000/testimonials', {
-                method: 'DELETE',
+            // If login successful, delete reviews using Basic Auth
+            const deleteResponse = await fetch(`${API_BASE_URL}/admin/reviews`, {
+                method: "DELETE",
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': 'Basic ' + btoa(`${adminCredentials.username}:${adminCredentials.password}`)
                 }
             });
     
-            const result = await response.json();
-            if (result.success) {
-                setReviews([]);
-                alert("All testimonials cleared");
-            } else {
-                alert(result.error || "Failed to clear testimonials");
+            if (!deleteResponse.ok) {
+                const error = await deleteResponse.json();
+                throw new Error(error.error || "Failed to clear reviews");
             }
-        } catch (error) {
-            console.error("Error clearing reviews:", error);
-            alert("Error clearing testimonials");
-        }
-    };
-
-    useEffect(() => {
-        const reviewsClearedFlag = localStorage.getItem("reviewsCleared");
-        if (reviewsClearedFlag === "true") {
+    
+            // Update UI
             setReviews([]);
-            return;
+            localStorage.removeItem("reviews");
+            setIsAdminModalOpen(false);
+            alert("All testimonials cleared successfully");
+    
+        } catch (error) {
+            console.error("Admin operation failed:", error);
+            alert(error.message);
         }
-
-        const storedReviews = localStorage.getItem("reviews");
-        if (storedReviews) {
-            setReviews(JSON.parse(storedReviews));
-        } else {
-            fetch("/api/get-reviews")
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.reviews && data.reviews.length > 0) {
-                        setReviews(data.reviews);
-                        localStorage.setItem("reviews", JSON.stringify(data.reviews));
-                    } else {
-                        setReviews([]);
-                    }
-                });
-        }
-    }, []);
-
-    const resetReviews = () => {
-        localStorage.removeItem("reviewsCleared");
-        fetch("/api/get-reviews")
-            .then((res) => res.json())
-            .then((data) => {
-                setReviews(data.reviews || []);
-                localStorage.setItem("reviews", JSON.stringify(data.reviews || []));
-            })
-            .catch((error) => {
-                console.error("Error fetching reviews after reset:", error);
-            });
     };
 
+    const clearReviews = () => {
+        setIsAdminModalOpen(true);
+    };
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-      
-        if (!formData.message.trim()) {
-          alert("Please write a testimonial.");
-          return;
-        }
-      
-        try {
-          const response = await fetch("http://localhost:5000/submit-review", {
-            method: "POST",
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-              name: formData.name.trim(),
-              message: formData.message.trim(),
-              photo: formData.photo || null
-            })
-          });
-      
-          // First check if response is OK
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Server error: ${errorText}`);
-          }
-      
-          // Then parse as JSON
-          const data = await response.json();
-          
-          // Update state
-          setReviews((prev) => [data.review, ...prev]);
-          localStorage.setItem("reviews", JSON.stringify([data.review, ...reviews]));
-          
-        } catch (err) {
-          console.error("Submission error:", err);
-          alert(`Error: ${err.message}`);
-        } finally {
-          setFormData({ name: "", message: "", photo: null });
-          closeModal();
-        }
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
     const handleImageError = (e) => {
         e.target.src = defaultAvatar;
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-        setIsCameraAllowed(false);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        if (videoStream) {
-            videoStream.getTracks().forEach((track) => track.stop());
-            setVideoStream(null);
-        }
-    };
-
-    const handleCameraPermission = async () => {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            setIsCameraAllowed(true);
-            setVideoStream(stream);
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-            }
-        } catch (err) {
-            alert("Camera access denied or not available.");
-        }
-    };
-
-    const handleCapture = () => {
-        const canvas = document.createElement("canvas");
-        const video = videoRef.current;
-        if (!video) return;
-
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext("2d").drawImage(video, 0, 0);
-
-        canvas.toBlob((blob) => {
-            if (blob) {
-                setFormData((prev) => ({ ...prev, profileImage: blob }));
-            }
-        }, "image/jpeg");
-    };
-
     return (
         <div className="relative flex flex-col justify-center items-center overflow-hidden">
-            {/* Hero Section */}
-            <section
-                className="relative w-full min-h-[50vh] max-h-[110vh] flex items-center justify-center bg-cover bg-center"
-                style={{
-                    backgroundImage: "url('/images/360_F_69024210_2JAt5Ura3ETabT3KVb1SNPkPNlWDbLKT.webp')",
-                }}
-                aria-label="Sprout & Spoon restaurant hero image"
-            >
+            <section className="relative w-full min-h-[50vh] max-h-[110vh] flex items-center justify-center bg-cover bg-center"
+                style={{ backgroundImage: "url('/images/hero.webp')" }}>
                 <div className="absolute inset-0 bg-black/60" />
                 <div className="relative z-10 text-center px-6">
                     <h1 className="tangerine-bold text-white text-7xl md:text-8xl mb-6 drop-shadow-lg">
                         Sprout & Spoon
                     </h1>
-                    <p className="text-white text-xl md:text-2xl mb-8 font-light max-w-2xl mx-auto">
-                        Exceptional food and service for your special events and everyday dining
-                    </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href="/reservations">
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full text-lg font-medium transition-all duration-300 cursor-pointer">
+                            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full text-lg font-medium">
                                 Reserve a Table
                             </button>
                         </Link>
                         <Link href="/menu">
-                            <button className="bg-transparent border-2 border-white hover:bg-white/20 text-white px-8 py-3 rounded-full text-lg font-medium transition-all duration-300 cursor-pointer">
+                            <button className="bg-transparent border-2 border-white hover:bg-white/20 text-white px-8 py-3 rounded-full text-lg font-medium">
                                 View Menu
                             </button>
                         </Link>
@@ -352,7 +267,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Mission Section */}
             <section className="w-full bg-amber-50 py-16 px-6 md:px-20 text-center">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
@@ -382,7 +296,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Featured Dishes Section */}
             <section className="w-full py-16 px-6 md:px-20 bg-white">
                 <div className="max-w-6xl mx-auto text-center">
                     <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
@@ -440,15 +353,12 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Enhanced Testimonials Section */}
             <section className="w-full py-16 px-6 md:px-20 bg-gradient-to-r from-green-100 via-stone-50 to-blue-100" id="testimonials">
                 <div className="max-w-6xl mx-auto">
-                    <motion.h2 
-                        className="text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500"
+                    <motion.h2 className="text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500"
                         initial={{ opacity: 0, y: -30 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}
-                    >
+                        transition={{ duration: 0.6, ease: "easeOut" }}>
                         What Do Our Users Say?
                     </motion.h2>
                     
@@ -457,27 +367,23 @@ export default function Home() {
                             onClick={openModal}
                             className="bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-full text-lg"
                             whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                        >
+                            whileTap={{ scale: 0.95 }}>
                             Add a Review
                         </motion.button>
                         <button
                             onClick={clearReviews}
-                            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full"
-                        >
+                            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full">
                             Clear Testimonial History
                         </button>
                     </div>
                     
                     {isModalOpen && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 bg-opacity-60 z-50" ref={constraintsRef}>
+                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 z-50">
                             <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl h-fit max-h-[85vh] overflow-y-auto"
                                 initial={{ scale: 0.9, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale:0.9, opacity: 0 }}
-                                drag
-                                dragConstraints={constraintsRef}
-                            >
+                                drag>
                                 <h3 className="text-3xl font-bold mb-4 text-gray-800 text-center">Submit Your Review</h3>
                                 <form onSubmit={handleSubmit} className="space-y-5">
                                     <input
@@ -510,8 +416,7 @@ export default function Home() {
                                                             className={`rounded-full overflow-hidden border-4 ${
                                                                 formData.photo === avatar ? "border-green-500" : "border-transparent"
                                                             }`}
-                                                            onClick={() => setFormData({ ...formData, photo: avatar })}
-                                                        >
+                                                            onClick={() => setFormData({ ...formData, photo: avatar })}>
                                                             <img 
                                                                 src={avatar}
                                                                 alt={`Avatar ${index + 1}`} 
@@ -527,8 +432,7 @@ export default function Home() {
                                                 <motion.div
                                                     initial={{ opacity: 0, y: 10 }}
                                                     animate={{ opacity: 1, y: 0 }}
-                                                    className="flex flex-col items-center gap-2 pt-4 col-span-4"
-                                                >
+                                                    className="flex flex-col items-center gap-2 pt-4 col-span-4">
                                                     <span className="text-sm text-gray-500">Selected Avatar</span>
                                                     <img
                                                         src={formData.photo}
@@ -545,14 +449,12 @@ export default function Home() {
                                         <button
                                             type="button"
                                             onClick={closeModal}
-                                            className="bg-gray-300 py-2 px-4 rounded-md hover:bg-gray-400"
-                                        >
+                                            className="bg-gray-300 py-2 px-4 rounded-md hover:bg-gray-400">
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
-                                            className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700"
-                                        >
+                                            className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700">
                                             Submit Review
                                         </button>
                                     </div>
@@ -562,49 +464,42 @@ export default function Home() {
                     )}
                     
                     {isAdminModalOpen && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 z-50">
-                            <motion.div
-                                className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.9, opacity: 0 }}
-                            >
-                                <h3 className="text-xl font-bold mb-4 text-gray-800 text-center">Admin Login</h3>
-                                <input
-                                    type="text"
-                                    name="username"
-                                    placeholder="Username"
-                                    value={adminCredentials.username}
-                                    onChange={(e) =>
-                                        setAdminCredentials({ ...adminCredentials, username: e.target.value })
-                                    }
-                                    className="w-full mb-3 p-3 border border-gray-300 rounded-md text-gray-800"
-                                />
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Password"
-                                    value={adminCredentials.password}
-                                    onChange={(e) =>
-                                        setAdminCredentials({ ...adminCredentials, password: e.target.value })
-                                    }
-                                    className="w-full mb-4 p-3 border border-gray-300 rounded-md text-gray-800"
-                                />
-                                <div className="flex justify-between">
-                                    <button
-                                        onClick={() => setIsAdminModalOpen(false)}
-                                        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        onClick={handleAdminLogin}
-                                        className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
-                                    >
-                                        Log In
-                                    </button>
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                            <div className="bg-white p-6 rounded-lg max-w-md w-full">
+                                <h3 className="text-xl font-bold mb-4">Admin Login</h3>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Username</label>
+                                        <input
+                                            type="text"
+                                            value={adminCredentials.username}
+                                            onChange={(e) => setAdminCredentials({...adminCredentials, username: e.target.value})}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium mb-1">Password</label>
+                                        <input
+                                            type="password"
+                                            value={adminCredentials.password}
+                                            onChange={(e) => setAdminCredentials({...adminCredentials, password: e.target.value})}
+                                            className="w-full p-2 border rounded"
+                                        />
+                                    </div>
+                                    <div className="flex justify-end space-x-2">
+                                        <button
+                                            onClick={() => setIsAdminModalOpen(false)}
+                                            className="px-4 py-2 bg-gray-300 rounded">
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={handleAdminLogin}
+                                            className="px-4 py-2 bg-green-600 text-white rounded">
+                                            Login
+                                        </button>
+                                    </div>
                                 </div>
-                            </motion.div>
+                            </div>
                         </div>
                     )}
                     
@@ -621,19 +516,21 @@ export default function Home() {
                                         whileInView={{ opacity: 1, y: 0 }}
                                         viewport={{ once: true }}
                                         transition={{ duration: 0.4, delay: index * 0.1 }}
-                                        whileHover={{ scale: 1.04 }}
-                                    >
+                                        whileHover={{ scale: 1.04 }}>
                                         <div className="flex items-center gap-4 mb-4">
                                             <img
                                                 src={review.image || defaultAvatar}
                                                 alt="User avatar"
                                                 className="w-14 h-14 rounded-full object-cover border border-gray-300"
+                                                onError={handleImageError}
                                             />
                                             <h3 className="text-gray-800 text-lg font-semibold">
                                                 {review.name || "Anonymous"}
                                             </h3>
                                         </div>
-                                        <p className="text-gray-700 text-base break-words whitespace-pre-wrap">{review.message}</p>
+                                        <p className="text-gray-700 text-base break-words whitespace-pre-wrap">
+                                            {review.message}
+                                        </p>
                                     </motion.div>
                                 ))}
                             </div>
@@ -642,7 +539,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Newsletter Section */}
             <section className="w-full py-16 px-6 md:px-20 bg-amber-50">
                 <div className="max-w-4xl mx-auto text-center">
                     <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
@@ -657,7 +553,7 @@ export default function Home() {
                             placeholder="Your email address"
                             className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
-                        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium transition-all duration-300 cursor-pointer">
+                        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium">
                             Subscribe
                         </button>
                     </div>
