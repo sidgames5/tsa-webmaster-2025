@@ -245,320 +245,320 @@ export default function Home() {
 
     return (
         <div className="relative flex flex-col justify-center items-center overflow-hidden">
-            <section className="relative w-full min-h-[50vh] max-h-[110vh] flex items-center justify-center bg-cover bg-center"
-                style={{ backgroundImage: "url('/images/hero.webp')" }}>
-                <div className="absolute inset-0 bg-black/60" />
-                <div className="relative z-10 text-center px-6">
-                    <h1 className="tangerine-bold text-white text-7xl md:text-8xl mb-6 drop-shadow-lg">
-                        Sprout & Spoon
-                    </h1>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link href="/reservations">
-                            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full text-lg font-medium">
-                                Reserve a Table
-                            </button>
-                        </Link>
-                        <Link href="/menu">
-                            <button className="bg-transparent border-2 border-white hover:bg-white/20 text-white px-8 py-3 rounded-full text-lg font-medium">
-                                View Menu
-                            </button>
-                        </Link>
+          <section className="relative w-full min-h-[50vh] max-h-[110vh] flex items-center justify-center bg-cover bg-center"
+            style={{ backgroundImage: "url('/images/360_F_69024210_2JAt5Ura3ETabT3KVb1SNPkPNlWDbLKT.webp')" }}>
+            <div className="absolute inset-0 bg-black/60" />
+            <div className="relative z-10 text-center px-6">
+              <h1 className="tangerine-bold text-white text-7xl md:text-8xl mb-6 drop-shadow-lg">
+                Sprout & Spoon
+              </h1>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/reservations">
+                  <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-full text-lg font-medium">
+                    Reserve a Table
+                  </button>
+                </Link>
+                <Link href="/menu">
+                  <button className="bg-transparent border-2 border-white hover:bg-white/20 text-white px-8 py-3 rounded-full text-lg font-medium">
+                    View Menu
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </section>
+      
+          <section className="w-full bg-amber-50 py-16 px-6 md:px-20 text-center">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
+                Committed to Green
+              </h2>
+              <p className="text-gray-700 text-lg md:text-xl mb-8">
+                At Sprout & Spoon, we believe that eating well and living sustainably go hand in hand.
+                Our menu is rooted in fresh, locally sourced produce, crafted to bring out the best flavors each season has to offer.
+                Every dish we serve is a celebration of nature&apos;s bounty, designed to nourish both body and soul.
+              </p>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {commitments.map((item, index) => (
+                  <li key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div className="flex justify-center text-3xl mb-4">{item.icon}</div>
+                    <h3 className="text-xl font-semibold text-green-800 mb-2">{item.text}</h3>
+                    <p className="text-gray-600">
+                      {index === 0 && "Sourced within 50 miles"}
+                      {index === 1 && "Certified organic or grown using organic practices"}
+                      {index === 2 && "Menu changes quarterly to reflect what's in season"}
+                      {index === 3 && "Composting, recycling, and energy-efficient operations"}
+                      {index === 4 && "Creative dishes that celebrate plant-based ingredients"}
+                      {index === 5 && "Minimizing food waste through careful planning"}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+      
+          <section className="w-full py-16 px-6 md:px-20 bg-white">
+            <div className="max-w-6xl mx-auto text-center">
+              <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
+                Signature Creations
+              </h2>
+              <p className="text-gray-600 text-lg md:text-xl mb-12 max-w-3xl mx-auto">
+                From hearty grain bowls to vibrant seasonal salads, our chefs create dishes that are as nourishing as they are delicious.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredDishes.map((dish) => (
+                  <div
+                    key={dish.id}
+                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <div className="relative h-60 overflow-hidden">
+                      <Image
+                        src={dish.img}
+                        alt={dish.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                        width={512}
+                        height={512}
+                      />
+                      {dish.seasonal && (
+                        <span className="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                          Seasonal
+                        </span>
+                      )}
+                      {dish.vegan && (
+                        <span className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                          Vegan
+                        </span>
+                      )}
                     </div>
-                </div>
-            </section>
-
-            <section className="w-full bg-amber-50 py-16 px-6 md:px-20 text-center">
-                <div className="max-w-6xl mx-auto">
-                    <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
-                        Committed to Green
-                    </h2>
-                    <p className="text-gray-700 text-lg md:text-xl mb-8">
-                        At Sprout & Spoon, we believe that eating well and living sustainably go hand in hand.
-                        Our menu is rooted in fresh, locally sourced produce, crafted to bring out the best flavors each season has to offer.
-                        Every dish we serve is a celebration of nature&apos;s bounty, designed to nourish both body and soul.
-                    </p>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {commitments.map((item, index) => (
-                            <li key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-                                <div className="flex justify-center text-3xl mb-4">{item.icon}</div>
-                                <h3 className="text-xl font-semibold text-green-800 mb-2">{item.text}</h3>
-                                <p className="text-gray-600">
-                                    {index === 0 && "Sourced within 50 miles"}
-                                    {index === 1 && "Certified organic or grown using organic practices"}
-                                    {index === 2 && "Menu changes quarterly to reflect what's in season"}
-                                    {index === 3 && "Composting, recycling, and energy-efficient operations"}
-                                    {index === 4 && "Creative dishes that celebrate plant-based ingredients"}
-                                    {index === 5 && "Minimizing food waste through careful planning"}
-                                </p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </section>
-
-            <section className="w-full py-16 px-6 md:px-20 bg-white">
-                <div className="max-w-6xl mx-auto text-center">
-                    <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
-                        Signature Creations
-                    </h2>
-                    <p className="text-gray-600 text-lg md:text-xl mb-12 max-w-3xl mx-auto">
-                        From hearty grain bowls to vibrant seasonal salads, our chefs create dishes that are as nourishing as they are delicious.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {featuredDishes.map((dish) => (
-                            <div
-                                key={dish.id}
-                                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
-                            >
-                                <div className="relative h-60 overflow-hidden">
-                                    <Image
-                                        src={dish.img}
-                                        alt={dish.title}
-                                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                        loading="lazy"
-                                        width={512}
-                                        height={512}
-                                    />
-                                    {dish.seasonal && (
-                                        <span className="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                            Seasonal
-                                        </span>
-                                    )}
-                                    {dish.vegan && (
-                                        <span className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                            Vegan
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="p-6">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="text-xl font-bold text-gray-800">{dish.title}</h3>
-                                        <span className="text-gray-500 text-sm">{dish.calories} cal</span>
-                                    </div>
-                                    <p className="text-gray-600 mb-4">{dish.description}</p>
-                                    <div className="border-t border-gray-100 pt-4">
-                                        <h4 className="text-sm font-semibold text-green-700 mb-2">Key Ingredients:</h4>
-                                        <div className="flex flex-wrap gap-2">
-                                            {dish.ingredients.map((ingredient, idx) => (
-                                                <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                                                    {ingredient}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold text-gray-800">{dish.title}</h3>
+                        <span className="text-gray-500 text-sm">{dish.calories} cal</span>
+                      </div>
+                      <p className="text-gray-600 mb-4">{dish.description}</p>
+                      <div className="border-t border-gray-100 pt-4">
+                        <h4 className="text-sm font-semibold text-green-700 mb-2">Key Ingredients:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {dish.ingredients.map((ingredient, idx) => (
+                            <span key={idx} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                              {ingredient}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+      
+          <section className="w-full py-16 px-6 md:px-20 bg-gradient-to-r from-green-100 via-stone-50 to-blue-100" id="testimonials">
+            <div className="max-w-6xl mx-auto">
+              <motion.h2 className="text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500"
+                initial={{ opacity: 0, y: -30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}>
+                What Do Our Users Say?
+              </motion.h2>
+              
+              <div className="mb-12 flex justify-center items-center gap-10">
+                <motion.button
+                  onClick={openModal}
+                  className="bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-full text-lg"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}>
+                  Add a Review
+                </motion.button>
+                <button
+                  onClick={clearReviews}
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full">
+                  Clear Testimonial History
+                </button>
+              </div>
+              
+              {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 z-50">
+                  <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl h-fit max-h-[85vh] overflow-y-auto"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale:0.9, opacity: 0 }}
+                    drag>
+                    <h3 className="text-3xl font-bold mb-4 text-gray-800 text-center">Submit Your Review</h3>
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Your name (optional)"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-800"
+                      />
+                      <textarea
+                        name="message"
+                        placeholder="Write your testimonial..."
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                        className="w-full p-3 border border-gray-300 rounded-md h-28 resize-none focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800"
+                      />
+                      
+                      <div className="space-y-2">
+                        <label className="block font-medium text-gray-700">Choose an Avatar:</label>
+                        <div className="grid grid-cols-4 gap-3">
+                          <div className="col-span-4">
+                            <label className="block mb-2 text-sm font-medium text-gray-700">Choose an Avatar</label>
+                            <div className="grid grid-cols-7 gap-4 mb-4">
+                              {avatarList.map((avatar, index) => (
+                                <button
+                                  key={index}
+                                  type="button"
+                                  className={`rounded-full overflow-hidden border-4 ${
+                                    formData.photo === avatar ? "border-green-500" : "border-transparent"
+                                  }`}
+                                  onClick={() => setFormData({ ...formData, photo: avatar })}>
+                                  <img 
+                                    src={avatar}
+                                    alt={`Avatar ${index + 1}`} 
+                                    className="w-16 h-16 object-cover" 
+                                    onError={handleImageError}
+                                  />
+                                </button>
+                              ))}
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <section className="w-full py-16 px-6 md:px-20 bg-gradient-to-r from-green-100 via-stone-50 to-blue-100" id="testimonials">
-                <div className="max-w-6xl mx-auto">
-                    <motion.h2 className="text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500"
-                        initial={{ opacity: 0, y: -30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, ease: "easeOut" }}>
-                        What Do Our Users Say?
-                    </motion.h2>
-                    
-                    <div className="mb-12 flex justify-center items-center gap-10">
-                        <motion.button
-                            onClick={openModal}
-                            className="bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-full text-lg"
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}>
-                            Add a Review
-                        </motion.button>
-                        <button
-                            onClick={clearReviews}
-                            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full">
-                            Clear Testimonial History
-                        </button>
-                    </div>
-                    
-                    {isModalOpen && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 z-50">
-                            <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl h-fit max-h-[85vh] overflow-y-auto"
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale:0.9, opacity: 0 }}
-                                drag>
-                                <h3 className="text-3xl font-bold mb-4 text-gray-800 text-center">Submit Your Review</h3>
-                                <form onSubmit={handleSubmit} className="space-y-5">
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        placeholder="Your name (optional)"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-800"
-                                    />
-                                    <textarea
-                                        name="message"
-                                        placeholder="Write your testimonial..."
-                                        value={formData.message}
-                                        onChange={handleChange}
-                                        required
-                                        className="w-full p-3 border border-gray-300 rounded-md h-28 resize-none focus:ring-2 focus:ring-green-500 focus:outline-none text-gray-800"
-                                    />
-                                    
-                                    <div className="space-y-2">
-                                        <label className="block font-medium text-gray-700">Choose an Avatar:</label>
-                                        <div className="grid grid-cols-4 gap-3">
-                                            <div className="col-span-4">
-                                                <label className="block mb-2 text-sm font-medium text-gray-700">Choose an Avatar</label>
-                                                <div className="grid grid-cols-7 gap-4 mb-4">
-                                                    {avatarList.map((avatar, index) => (
-                                                        <button
-                                                            key={index}
-                                                            type="button"
-                                                            className={`rounded-full overflow-hidden border-4 ${
-                                                                formData.photo === avatar ? "border-green-500" : "border-transparent"
-                                                            }`}
-                                                            onClick={() => setFormData({ ...formData, photo: avatar })}>
-                                                            <img 
-                                                                src={avatar}
-                                                                alt={`Avatar ${index + 1}`} 
-                                                                className="w-16 h-16 object-cover" 
-                                                                onError={handleImageError}
-                                                            />
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            
-                                            {formData.photo && (
-                                                <motion.div
-                                                    initial={{ opacity: 0, y: 10 }}
-                                                    animate={{ opacity: 1, y: 0 }}
-                                                    className="flex flex-col items-center gap-2 pt-4 col-span-4">
-                                                    <span className="text-sm text-gray-500">Selected Avatar</span>
-                                                    <img
-                                                        src={formData.photo}
-                                                        alt="Selected avatar"
-                                                        className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
-                                                        onError={handleImageError}
-                                                    />
-                                                </motion.div>
-                                            )}
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex justify-end space-x-4">
-                                        <button
-                                            type="button"
-                                            onClick={closeModal}
-                                            className="bg-gray-300 py-2 px-4 rounded-md hover:bg-gray-400">
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700">
-                                            Submit Review
-                                        </button>
-                                    </div>
-                                </form>
+                          </div>
+                          
+                          {formData.photo && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="flex flex-col items-center gap-2 pt-4 col-span-4">
+                              <span className="text-sm text-gray-500">Selected Avatar</span>
+                              <img
+                                src={formData.photo}
+                                alt="Selected avatar"
+                                className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
+                                onError={handleImageError}
+                              />
                             </motion.div>
+                          )}
                         </div>
-                    )}
-                    
-                    {isAdminModalOpen && (
-                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                            <div className="bg-white p-6 rounded-lg max-w-md w-full">
-                                <h3 className="text-xl font-bold mb-4">Admin Login</h3>
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Username</label>
-                                        <input
-                                            type="text"
-                                            value={adminCredentials.username}
-                                            onChange={(e) => setAdminCredentials({...adminCredentials, username: e.target.value})}
-                                            className="w-full p-2 border rounded"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-1">Password</label>
-                                        <input
-                                            type="password"
-                                            value={adminCredentials.password}
-                                            onChange={(e) => setAdminCredentials({...adminCredentials, password: e.target.value})}
-                                            className="w-full p-2 border rounded"
-                                        />
-                                    </div>
-                                    <div className="flex justify-end space-x-2">
-                                        <button
-                                            onClick={() => setIsAdminModalOpen(false)}
-                                            className="px-4 py-2 bg-gray-300 rounded">
-                                            Cancel
-                                        </button>
-                                        <button
-                                            onClick={handleAdminLogin}
-                                            className="px-4 py-2 bg-green-600 text-white rounded">
-                                            Login
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    
-                    <div className="max-h-[500px] overflow-y-auto px-4">
-                        {reviews.length === 0 ? (
-                            <p className="text-gray-500 text-center">No reviews yet</p>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mt-2">
-                                {reviews.map((review, index) => (
-                                    <motion.div
-                                        key={index}
-                                        className="bg-stone-100 text-black shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 border-green-400"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ duration: 0.4, delay: index * 0.1 }}
-                                        whileHover={{ scale: 1.04 }}>
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <img
-                                                src={review.image || defaultAvatar}
-                                                alt="User avatar"
-                                                className="w-14 h-14 rounded-full object-cover border border-gray-300"
-                                                onError={handleImageError}
-                                            />
-                                            <h3 className="text-gray-800 text-lg font-semibold">
-                                                {review.name || "Anonymous"}
-                                            </h3>
-                                        </div>
-                                        <p className="text-gray-700 text-base break-words whitespace-pre-wrap">
-                                            {review.message}
-                                        </p>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </section>
-
-            <section className="w-full py-16 px-6 md:px-20 bg-amber-50">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
-                        Join Our Community
-                    </h2>
-                    <p className="text-gray-700 text-lg mb-8 max-w-2xl mx-auto">
-                        Sign up for updates on seasonal menus, special events, and exclusive offers.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                        <input
-                            type="email"
-                            placeholder="Your email address"
-                            className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium">
-                            Subscribe
+                      </div>
+                      
+                      <div className="flex justify-end space-x-4">
+                        <button
+                          type="button"
+                          onClick={closeModal}
+                          className="bg-gray-300 py-2 px-4 rounded-md hover:bg-gray-400">
+                          Cancel
                         </button>
-                    </div>
+                        <button
+                          type="submit"
+                          className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700">
+                          Submit Review
+                        </button>
+                      </div>
+                    </form>
+                  </motion.div>
                 </div>
-            </section>
+              )}
+              
+              {isAdminModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                  <div className="bg-white p-6 rounded-lg max-w-md w-full">
+                    <h3 className="text-xl font-bold mb-4">Admin Login</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Username</label>
+                        <input
+                          type="text"
+                          value={adminCredentials.username}
+                          onChange={(e) => setAdminCredentials({...adminCredentials, username: e.target.value})}
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Password</label>
+                        <input
+                          type="password"
+                          value={adminCredentials.password}
+                          onChange={(e) => setAdminCredentials({...adminCredentials, password: e.target.value})}
+                          className="w-full p-2 border rounded"
+                        />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <button
+                          onClick={() => setIsAdminModalOpen(false)}
+                          className="px-4 py-2 bg-gray-300 rounded">
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleAdminLogin}
+                          className="px-4 py-2 bg-green-600 text-white rounded">
+                          Login
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div className="max-h-[500px] overflow-y-auto px-4">
+                {reviews.length === 0 ? (
+                  <p className="text-gray-500 text-center">No reviews yet</p>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mt-2">
+                    {reviews.map((review, index) => (
+                      <motion.div
+                        key={index}
+                        className="bg-stone-100 text-black shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 border-green-400"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        whileHover={{ scale: 1.04 }}>
+                        <div className="flex items-center gap-4 mb-4">
+                          <img
+                            src={review.image || defaultAvatar}
+                            alt="User avatar"
+                            className="w-14 h-14 rounded-full object-cover border border-gray-300"
+                            onError={handleImageError}
+                          />
+                          <h3 className="text-gray-800 text-lg font-semibold">
+                            {review.name || "Anonymous"}
+                          </h3>
+                        </div>
+                        <p className="text-gray-700 text-base break-words whitespace-pre-wrap">
+                          {review.message}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+      
+          <section className="w-full py-16 px-6 md:px-20 bg-amber-50">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-dm-serif italic text-3xl md:text-5xl text-green-800 mb-6">
+                Join Our Community
+              </h2>
+              <p className="text-gray-700 text-lg mb-8 max-w-2xl mx-auto">
+                Sign up for updates on seasonal menus, special events, and exclusive offers.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+                <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium">
+                  Subscribe
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
-    );
+      );
 }
