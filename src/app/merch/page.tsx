@@ -17,7 +17,6 @@ interface MenuSection {
   items: MenuItem[];
 }
 
-// Assuming menuSections is imported here from the other file
 const menuSections: MenuSection[] = [
   {
     title: "Starters",
@@ -88,7 +87,7 @@ const menuSections: MenuSection[] = [
       },
     ],
   },
-]; // Replace with the actual path
+];
 
 interface Product {
   id: number;
@@ -129,98 +128,107 @@ const products: Product[] = [
   },
 ];
 
-interface CartItem extends Product {
+interface CartItem {
+  id?: number;
+  name: string;
+  price: string;
   count: number;
-}
-
-interface FoodCartItem extends MenuItem {
-  quantity?: number;
-}
-
-interface FoodCart {
-  [key: string]: FoodCartItem;
-}
-
-interface MerchCart {
-  [key: string]: CartItem;
+  description?: string;
+  image?: string;
+  ingredients?: string[];
+  type: 'food' | 'merch';
 }
 
 export default function MerchPage() {
   const [showModal, setShowModal] = useState(false);
-  const [cart, setCart] = useState<MerchCart>({});
-  const [foodCart, setFoodCart] = useState<FoodCart>({}); // New state for food cart
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
       try {
-        const parsedCart: Product[] = JSON.parse(storedCart);
-        const grouped: MerchCart = {};
-        parsedCart.forEach((item) => {
-          if (grouped[item.name]) {
-            grouped[item.name].count++;
-          } else {
-            grouped[item.name] = { ...item, count: 1 };
-          }
-        });
-        setCart(grouped);
+        const parsedCart: CartItem[] = JSON.parse(storedCart);
+        setCart(parsedCart);
       } catch (error) {
         console.error("Error parsing cart from localStorage:", error);
-        setCart({});
-      }
-    }
-
-    // Load food cart from local storage
-    const storedFoodCart = localStorage.getItem("foodCart");
-    if (storedFoodCart) {
-      try {
-        const parsedFoodCart: FoodCart = JSON.parse(storedFoodCart);
-        setFoodCart(parsedFoodCart);
-      } catch (error) {
-        console.error("Error parsing food cart from localStorage:", error);
-        setFoodCart({});
+        setCart([]);
       }
     }
   }, []);
 
-  const addToCart = (product: Product) => {
-    const newCart = { ...cart };
-    if (newCart[product.name]) {
-      newCart[product.name].count++;
-    } else {
-      newCart[product.name] = { ...product, count: 1 };
-    }
+  const updateCart = (newCart: CartItem[]) => {
     setCart(newCart);
-    localStorage.setItem(
-      "cart",
-      JSON.stringify(
-        Object.values(newCart).flatMap((item) =>
-          Array(item.count).fill({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            image: item.image,
-            description: item.description,
-          })
-        )
-      )
-    );
+    localStorage.setItem("cart", JSON.stringify(newCart));
+  };
+
+  const addToCart = (product: Product) => {
+    const existingItem = cart.find(item => item.name === product.name && item.type === 'merch');
+    const newCart = [...cart];
+    
+    if (existingItem) {
+      existingItem.count += 1;
+    } else {
+      newCart.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        count: 1,
+        description: product.description,
+        image: product.image,
+        type: 'merch'
+      });
+    }
+    
+    updateCart(newCart);
   };
 
   const addToFoodCart = (foodItem: MenuItem) => {
-    const newFoodCart = { ...foodCart };
-    if (newFoodCart[foodItem.name]) {
-      newFoodCart[foodItem.name].quantity = (newFoodCart[foodItem.name].quantity || 0) + 1;
+    const existingItem = cart.find(item => item.name === foodItem.name && item.type === 'food');
+    const newCart = [...cart];
+    
+    if (existingItem) {
+      existingItem.count += 1;
     } else {
-      newFoodCart[foodItem.name] = { ...foodItem, quantity: 1 };
+      newCart.push({
+        name: foodItem.name,
+        price: foodItem.price,
+        count: 1,
+        description: foodItem.description,
+        ingredients: foodItem.ingredients,
+        type: 'food'
+      });
     }
-    setFoodCart(newFoodCart);
-    localStorage.setItem("foodCart", JSON.stringify(newFoodCart));
+    
+    updateCart(newCart);
   };
 
-  const clearFoodOrders = () => {
-    setFoodCart({});
-    localStorage.removeItem("foodCart");
+  const removeFromCart = (index: number) => {
+    const newCart = [...cart];
+    newCart.splice(index, 1);
+    updateCart(newCart);
+  };
+
+  const updateQuantity = (index: number, newCount: number) => {
+    if (newCount < 1) return;
+    
+    const newCart = [...cart];
+    newCart[index].count = newCount;
+    updateCart(newCart);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
+
+  const getTotalItems = () => {
+    return cart.reduce((total, item) => total + item.count, 0);
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => {
+      return total + (parseFloat(item.price.replace("$", ""))) * item.count;
+    }, 0).toFixed(2);
   };
 
   return (
@@ -248,42 +256,23 @@ export default function MerchPage() {
                   <div key={item.name} className="bg-white rounded-lg shadow-md p-6">
                     <h4 className="text-xl font-semibold text-gray-900 mb-2">{item.name}</h4>
                     <p className="text-gray-600 mb-3">{item.description}</p>
-                    <span className="text-lg font-bold text-gray-900">{item.price}</span>
-                    <button
-                      onClick={() => addToFoodCart(item)}
-                      className="mt-3 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-                    >
-                      Add to Order
-                    </button>
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-gray-900">{item.price}</span>
+                      <button
+                        onClick={() => addToFoodCart(item)}
+                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                      >
+                        Add to Order
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           ))}
-          {Object.keys(foodCart).length > 0 && (
-            <div className="mt-8">
-              <h4 className="text-xl font-semibold text-gray-800 mb-2">Your Food Order</h4>
-              <ul className="text-gray-800 mb-4">
-                {Object.values(foodCart).map((item) => (
-                  <li key={item.name}>
-                    {item.name} x {item.quantity} - $
-                    {item.price ? (parseFloat(item.price.replace("$", "")) * (item.quantity || 0)).toFixed(2) : '0.00'}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={clearFoodOrders}
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
-              >
-                Clear Order
-              </button>
-              <Link href="/checkout" className="text-blue-600 hover:underline font-medium ml-4">
-                Proceed to Checkout →
-              </Link>
-            </div>
-          )}
         </div>
 
+        {/* Merchandise Section */}
         <div className="text-center mb-12">
           <motion.h1
             initial={{ y: -20 }}
@@ -360,6 +349,7 @@ export default function MerchPage() {
           ))}
         </motion.div>
 
+        {/* About Section */}
         <div className="mt-16 text-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -383,43 +373,129 @@ export default function MerchPage() {
           </motion.div>
         </div>
 
+        {/* Combined Cart Section */}
         <div className="mt-16 text-center">
-          <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
-          {Object.keys(cart).length === 0 ? (
+          <h2 className="text-2xl font-bold mb-4">Your Order ({getTotalItems()} items)</h2>
+          {cart.length === 0 ? (
             <p className="text-gray-600">Your cart is empty.</p>
           ) : (
-            <ul className="text-gray-800 mb-4">
-              {Object.values(cart).map((item) => (
-                <li key={item.name}>
-                  {item.name} x{item.count} - $
-                  {(parseFloat(item.price.replace("$", "")) * item.count).toFixed(2)}
-                </li>
-              ))}
-            </ul>
+            <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
+              <ul className="mb-6">
+                {cart.map((item, index) => (
+                  <li key={index} className="flex justify-between items-start py-3 border-b">
+                    <div className="flex-1">
+                      <div className="flex items-start">
+                        {item.image && (
+                          <div className="w-16 h-16 relative mr-4">
+                            <Image
+                              src={item.image}
+                              alt={item.name}
+                              fill
+                              className="object-cover rounded"
+                              sizes="64px"
+                              unoptimized={process.env.NODE_ENV !== "production"}
+                            />
+                          </div>
+                        )}
+                        <div>
+                          <span className="font-medium">{item.name}</span>
+                          {item.description && (
+                            <p className="text-sm text-gray-500 mt-1">{item.description}</p>
+                          )}
+                          {item.ingredients && (
+                            <p className="text-sm text-gray-500 mt-1">
+                              Ingredients: {item.ingredients.join(", ")}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-col items-end">
+                      <span className="font-medium">
+                        ${(parseFloat(item.price.replace("$", "")) * item.count).toFixed(2)}
+                      </span>
+                      <div className="flex items-center mt-2">
+                        <button
+                          onClick={() => updateQuantity(index, item.count - 1)}
+                          className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-l hover:bg-gray-300"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          min="1"
+                          value={item.count}
+                          onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
+                          className="w-12 text-center border-t border-b border-gray-300"
+                        />
+                        <button
+                          onClick={() => updateQuantity(index, item.count + 1)}
+                          className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-r hover:bg-gray-300"
+                        >
+                          +
+                        </button>
+                        <button
+                          onClick={() => removeFromCart(index)}
+                          className="ml-2 text-red-500 hover:text-red-700"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="flex justify-between items-center mb-6">
+                <span className="text-lg font-bold">Total:</span>
+                <span className="text-xl font-bold">${getTotalPrice()}</span>
+              </div>
+              <div className="flex justify-between">
+                <button
+                  onClick={clearCart}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                >
+                  Clear Order
+                </button>
+                <Link 
+                  href="/checkout" 
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Proceed to Checkout
+                </Link>
+              </div>
+            </div>
           )}
-          <Link href="/checkout" className="text-blue-600 hover:underline font-medium">
-            Link to Checkout →
-          </Link>
         </div>
-      </motion.main>
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-lg text-center shadow-xl">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Sustainable Materials</h2>
-            <p className="text-gray-700 mb-4">
-              We use organic cotton, bamboo, recycled plastics, and other environmentally conscious
-              materials to reduce waste and support sustainable practices.
-            </p>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-            >
-              Close
-            </button>
+        {/* Materials Modal */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-lg w-full mx-4 shadow-xl">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Sustainable Materials</h2>
+              <p className="text-gray-700 mb-4">
+                We use organic cotton, bamboo, recycled plastics, and other environmentally conscious
+                materials to reduce waste and support sustainable practices.
+              </p>
+              <div className="mt-6">
+                <h3 className="font-semibold mb-2">Our Materials:</h3>
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>100% Organic Cotton - Grown without harmful pesticides</li>
+                  <li>Bamboo - Fast-growing and renewable resource</li>
+                  <li>Recycled Polyester - Made from post-consumer plastic bottles</li>
+                  <li>Natural Dyes - Plant-based coloring with low environmental impact</li>
+                </ul>
+              </div>
+              <button
+                onClick={() => setShowModal(false)}
+                className="mt-6 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </motion.main>
     </div>
   );
 }
