@@ -62,11 +62,11 @@ const menuSections: MenuSection[] = [
         image: "https://cdn.pixabay.com/photo/2018/04/21/03/47/food-3337621_1280.jpg",
       },
       {
-        name: "Stuffed Acorn Squash",
-        description: "Wild rice, cranberries, and pecans in a roasted squash half.",
+        name: "Wild Rice Pilaf",
+        description: "Wild rice and sautéed vegetables in a single dish.",
         price: "$18",
         ingredients: ["Acorn squash", "Wild rice", "Dried cranberries", "Pecans", "Sage"],
-        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
+        image: "https://cd.pixabay.com/photo/WildRicePilaf.jpg",
       },
     ],
   },
@@ -78,21 +78,21 @@ const menuSections: MenuSection[] = [
         description: "Decadent dark chocolate cake with coconut cream frosting.",
         price: "$9",
         ingredients: ["Dark chocolate", "Coconut cream", "Almond flour", "Maple syrup"],
-        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
+        image: "https://cdn.pixabay.com/photo/2017/01/11/11/33/cake-1971552_1280.jpg",
       },
       {
         name: "Fruit Tart",
         description: "Crisp almond crust filled with vanilla custard and seasonal fruit.",
         price: "$8",
         ingredients: ["Almond flour", "Coconut milk", "Vanilla bean", "Seasonal berries"],
-        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
+        image: "https://cdn.pixabay.com/photo/2016/03/27/19/23/tart-1283822_1280.jpg",
       },
       {
         name: "Chia Pudding",
         description: "Chia seeds soaked in coconut milk with a touch of maple syrup.",
         price: "$7",
         ingredients: ["Chia seeds", "Coconut milk", "Maple syrup", "Fresh fruit"],
-        image: "https://cdn.pixabay.com/photo/placeholder.jpg",
+        image: "https://cdn.pixabay.com/photo/2020/07/18/11/20/chia-5416921_1280.jpg",
       },
     ],
   },
@@ -262,10 +262,13 @@ export default function MerchPage() {
               <h3 className="text-2xl font-semibold text-gray-800 mb-2">{section.title}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.items.map((item) => (
-                  <div key={item.name} className="bg-white rounded-lg shadow-md p-6">
+                  <div key={item.name} className="bg-white rounded-lg shadow-md p-6 h-[400px]">
                     {item.image && (
                       <div className="h-48 w-full relative mb-4">
-                        <img src={item.image} alt={item.name} layout="fill" objectFit="cover" className="rounded" />
+                        <img 
+                          src={item.image} 
+                          alt={item.name} 
+                          className="rounded-2xl max-h-[200px] max-w-[300px] ml-7 mt-3" />
                       </div>
                     )}
                     <h4 className="text-xl font-semibold text-gray-900 mb-2">{item.name}</h4>

@@ -132,7 +132,7 @@ export default function Home() {
 
     const handleAdminLogin = async () => {
         try {
-            const response = await fetch('http://localhost:5000/admin/clear-reviews', {
+            const response = await fetch('http://localhost:5000/admin/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -146,11 +146,11 @@ export default function Home() {
             const result = await response.json();
             
             if (result.success) {
+                // Store the token securely (HttpOnly cookie would be better)
+                localStorage.setItem('adminToken', result.token);
                 setIsAdminAuthenticated(true);
                 setIsAdminModalOpen(false);
-                setReviews([]);
-                localStorage.removeItem("reviews");
-                alert("All reviews have been cleared.");
+                alert("Admin login successful");
             } else {
                 alert(result.error || "Invalid credentials");
             }
@@ -161,29 +161,30 @@ export default function Home() {
     };
 
     const clearReviews = async () => {
-        if (!isAdminAuthenticated) {
+        const token = localStorage.getItem('adminToken');
+        if (!token) {
             setIsAdminModalOpen(true);
             return;
         }
-
-        if (!window.confirm("Are you sure you want to clear all reviews?")) return;
-
+    
         try {
-            const response = await fetch("/api/admin/reviews", {
-                method: "DELETE",
+            const response = await fetch('http://localhost:5000/testimonials', {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
-
-            if (response.ok) {
+    
+            const result = await response.json();
+            if (result.success) {
                 setReviews([]);
-                localStorage.setItem("reviewsCleared", "true");
-                localStorage.removeItem("reviews");
-                alert("All testimonials cleared.");
+                alert("All testimonials cleared");
             } else {
-                alert("Failed to clear testimonials.");
+                alert(result.error || "Failed to clear testimonials");
             }
         } catch (error) {
             console.error("Error clearing reviews:", error);
-            alert("Error clearing testimonials.");
+            alert("Error clearing testimonials");
         }
     };
 
