@@ -353,23 +353,19 @@ export default function Home() {
             </div>
           </section>
       
-          <section className="w-full py-16 px-6 md:px-20 bg-gradient-to-r from-green-100 via-stone-50 to-blue-100" id="testimonials">
+          <section className="w-full py-16 px-6 md:px-20 bg-green-50" id="testimonials">
             <div className="max-w-6xl mx-auto">
-              <motion.h2 className="text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500"
-                initial={{ opacity: 0, y: -30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}>
-                What Do Our Users Say?
-              </motion.h2>
+              <h2 className="text-4xl font-extrabold text-center mb-12 tracking-light bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-green-700 to-emerald-500">
+                What Do Our Customers Say?
+              </h2>
               
               <div className="mb-12 flex justify-center items-center gap-10">
-                <motion.button
+                <button
                   onClick={openModal}
-                  className="bg-gradient-to-r from-sky-400 via-blue-700 to-cyan-500 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-full text-lg"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}>
+                  className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:bg-green-700 text-white font-medium py-2.5 px-6 rounded-full text-lg cursor-pointer"
+                >
                   Add a Review
-                </motion.button>
+                </button>
                 <button
                   onClick={clearReviews}
                   className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-full">
@@ -379,11 +375,7 @@ export default function Home() {
               
               {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4 z-50">
-                  <motion.div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl h-fit max-h-[85vh] overflow-y-auto"
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale:0.9, opacity: 0 }}
-                    drag>
+                  <div className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-2xl h-fit max-h-[85vh] overflow-y-auto">
                     <h3 className="text-3xl font-bold mb-4 text-gray-800 text-center">Submit Your Review</h3>
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <input
@@ -429,9 +421,7 @@ export default function Home() {
                           </div>
                           
                           {formData.photo && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
+                            <div
                               className="flex flex-col items-center gap-2 pt-4 col-span-4">
                               <span className="text-sm text-gray-500">Selected Avatar</span>
                               <img
@@ -440,7 +430,7 @@ export default function Home() {
                                 className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
                                 onError={handleImageError}
                               />
-                            </motion.div>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -459,7 +449,7 @@ export default function Home() {
                         </button>
                       </div>
                     </form>
-                  </motion.div>
+                  </div>
                 </div>
               )}
               
@@ -509,7 +499,7 @@ export default function Home() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mt-2">
                     {reviews.map((review, index) => (
-                      <motion.div
+                      <div
                         key={index}
                         className="bg-stone-100 text-black shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 border-green-400"
                         initial={{ opacity: 0, y: 20 }}
@@ -531,7 +521,7 @@ export default function Home() {
                         <p className="text-gray-700 text-base break-words whitespace-pre-wrap">
                           {review.message}
                         </p>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 )}

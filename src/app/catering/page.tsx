@@ -53,7 +53,7 @@ const CateringPage: React.FC = () => {
             image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
         },
         {
-            title: "Rustic Tuscan Greens",
+            title: "Tuscan Greens",
             items: [
                 "White Beans & Kale Stew",
                 "Roasted Garlic Broccolini",
@@ -63,7 +63,7 @@ const CateringPage: React.FC = () => {
             image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8NXx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=60"
         },
         {
-            title: "Coastal Herb Harvest",
+            title: "Coastal Herb Bowl",
             items: [
                 "Lemon-Herb Couscous",
                 "Grilled Zucchini & Squash",
