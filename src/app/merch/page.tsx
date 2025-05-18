@@ -110,7 +110,7 @@ const products: Product[] = [
   {
     id: 1,
     name: "Organic Cotton T-Shirt",
-    price: "$24.99",
+    price: "$9.99",
     image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
     description: "Soft 100% organic cotton with minimalist print",
   },
@@ -241,7 +241,7 @@ export default function MerchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-amber-50">
+    <div className="min-h-screen bg-orange-50">
       <motion.main
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -259,19 +259,19 @@ export default function MerchPage() {
           </motion.h2>
           {menuSections.map((section) => (
             <div key={section.title} className="mb-8">
-              <h3 className="text-3xl p-2 font-semibold bg-gradient-to-r from-green-200 to-green-800 text-transparent bg-clip-text mb-2">{section.title}</h3>
+              <h3 className="text-3xl p-2 font-bold bg-gradient-to-r from-amber-800 to-brown-800 text-transparent bg-clip-text mb-2">{section.title}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {section.items.map((item) => (
                   <div key={item.name} className="bg-white rounded-lg shadow-md p-6 h-[400px]">
                     {item.image && (
-                      <div className="h-48 w-full relative mb-4">
+                      <div className="flex items-center justify-center h-48 w-full relative mb-4 mt-4">
                         <img 
                           src={item.image} 
                           alt={item.name} 
-                          className="rounded-2xl max-h-[200px] max-w-[300px] ml-7 mt-3 border-2 border-green-600" />
+                          className="rounded-2xl max-h-[200px] max-w-[300px] border-2 border-green-600" />
                       </div>
                     )}
-                    <h4 className="text-xl font-semibold text-gray-900 mb-2">{item.name}</h4>
+                    <h4 className="text-xl font-bold text-gray-900 mb-2">{item.name}</h4>
                     <p className="text-gray-600 mb-3 ml-7 mr-7">{item.description}</p>
                     <div className="flex justify-between items-center ml-20 mr-7">
                       <span className="text-lg font-bold text-gray-900">{item.price}</span>
@@ -495,7 +495,7 @@ export default function MerchPage() {
                 materials to reduce waste and support sustainable practices.
               </p>
               <div className="mt-6">
-                <h3 className="font-semibold mb-2">Our Materials:</h3>
+                <h3 className="font-bold mb-2">Our Materials:</h3>
                 <ul className="list-disc pl-5 space-y-2">
                   <li>100% Organic Cotton - Grown without harmful pesticides</li>
                   <li>Bamboo - Fast-growing and renewable resource</li>
