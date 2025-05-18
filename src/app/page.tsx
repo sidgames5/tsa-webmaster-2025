@@ -8,8 +8,6 @@ import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { admin_reviews, adminLogin, getReviews, submitReview } from './actions';
 
 export default function Home() {
-    const API_BASE_URL = "http://localhost:5000/api";
-
     const featuredDishes = [
         {
             id: 1,
@@ -94,19 +92,6 @@ export default function Home() {
         }
     ];
 
-    const [reviews, setReviews] = useState([]);
-    const [formData, setFormData] = useState({
-        name: "",
-        message: "",
-        photo: null,
-    });
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
-    const [adminCredentials, setAdminCredentials] = useState({
-        username: "",
-        password: ""
-    });
-
     const avatarList = [
         "https://cdn-icons-png.flaticon.com/512/4333/4333609.png",
         "https://cdn-icons-png.flaticon.com/512/4140/4140048.png",
@@ -128,15 +113,34 @@ export default function Home() {
     ];
     const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
 
+    interface Review {
+        name: string;
+        message: string;
+        image: string;
+        timestamp: number;
+    }
+
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [formData, setFormData] = useState({
+        name: "",
+        message: "",
+        photo: defaultAvatar,
+    });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+    const [adminCredentials, setAdminCredentials] = useState({
+        username: "",
+        password: ""
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isAdminProcessing, setIsAdminProcessing] = useState(false);
+
     useEffect(() => {
         const loadReviews = async () => {
             try {
-                const response = await getReviews();
-                if (!response.ok) throw new Error("Failed to fetch reviews");
-
-                const data = await response.json();
-                setReviews(data);
-                localStorage.setItem("reviews", JSON.stringify(data));
+                const fetchedReviews = await getReviews();
+                setReviews(fetchedReviews);
+                localStorage.setItem("reviews", JSON.stringify(fetchedReviews));
             } catch (error) {
                 console.error("Error loading reviews:", error);
                 const storedReviews = localStorage.getItem("reviews");
@@ -147,62 +151,66 @@ export default function Home() {
         loadReviews();
     }, []);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        setIsSubmitting(true);
+      
         if (!formData.message.trim()) {
-            alert("Please write a testimonial.");
-            return;
+          alert("Please write a testimonial.");
+          setIsSubmitting(false);
+          return;
         }
-
+      
         try {
-            const response = await submitReview(formData);
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || "Submission failed");
-            }
-
-            const result = await response.json();
-            setReviews(prev => [result.review, ...prev]);
+          // Create a FormData object
+          const fd = new FormData();
+          fd.append('name', formData.name);
+          fd.append('message', formData.message);
+          fd.append('photo', formData.photo);
+      
+          const result = await submitReview(fd);
+          
+          if (result.success && result.review) {
+            setReviews(prev => [result.review!, ...prev]);
             localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews]));
-
-        } catch (error) {
-            console.error("Submission error:", error);
-            alert(error.message);
-        } finally {
-            setFormData({ name: "", message: "", photo: null });
+            setFormData({ name: "", message: "", photo: defaultAvatar });
             setIsModalOpen(false);
+          } else {
+            throw new Error(result.error || "Submission failed");
+          }
+        } catch (error) {
+          console.error("Submission error:", error);
+          alert(error instanceof Error ? error.message : "An error occurred");
+        } finally {
+          setIsSubmitting(false);
         }
-    };
+      };
 
     const handleAdminLogin = async () => {
+        setIsAdminProcessing(true);
         try {
-            // First verify credentials
-            const loginResponse = await adminLogin(adminCredentials);
-
-            if (!loginResponse.ok) {
-                const error = await loginResponse.json();
-                throw new Error(error.error || "Login failed");
+            const loginResult = await adminLogin(adminCredentials);
+            
+            if (!loginResult.success) {
+                throw new Error(loginResult.error || "Login failed");
             }
 
-            // If login successful, delete reviews using Basic Auth
-            const deleteResponse = await admin_reviews();
-
-            if (!deleteResponse.ok) {
-                const error = await deleteResponse.json();
-                throw new Error(error.error || "Failed to clear reviews");
+            // If login successful, delete reviews
+            const deleteResult = await admin_reviews('delete');
+            
+            if (deleteResult.success) {
+                setReviews([]);
+                localStorage.removeItem("reviews");
+                setIsAdminModalOpen(false);
+                alert("All testimonials cleared successfully");
+            } else {
+                throw new Error(deleteResult.error || "Failed to clear reviews");
             }
-
-            // Update UI
-            setReviews([]);
-            localStorage.removeItem("reviews");
-            setIsAdminModalOpen(false);
-            alert("All testimonials cleared successfully");
-
         } catch (error) {
             console.error("Admin operation failed:", error);
-            alert(error.message);
+            alert(error instanceof Error ? error.message : "An error occurred");
+        } finally {
+            setIsAdminProcessing(false);
         }
     };
 
@@ -212,12 +220,12 @@ export default function Home() {
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
-    const handleImageError = (e) => {
-        e.target.src = defaultAvatar;
+    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+        e.currentTarget.src = defaultAvatar;
     };
 
     return (
@@ -420,8 +428,10 @@ export default function Home() {
                                         </button>
                                         <button
                                             type="submit"
-                                            className="bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700">
-                                            Submit Review
+                                            disabled={isSubmitting}
+                                            className={`bg-green-600 text-white py-2 px-6 rounded-full hover:bg-green-700 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        >
+                                            {isSubmitting ? 'Submitting...' : 'Submit Review'}
                                         </button>
                                     </div>
                                 </form>
@@ -460,8 +470,10 @@ export default function Home() {
                                         </button>
                                         <button
                                             onClick={handleAdminLogin}
-                                            className="px-4 py-2 bg-green-600 text-white rounded">
-                                            Login
+                                            disabled={isAdminProcessing}
+                                            className={`px-4 py-2 bg-green-600 text-white rounded ${isAdminProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        >
+                                            {isAdminProcessing ? 'Processing...' : 'Login'}
                                         </button>
                                     </div>
                                 </div>
@@ -475,7 +487,7 @@ export default function Home() {
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 justify-center mt-2">
                                 {reviews.map((review, index) => (
-                                    <div
+                                    <motion.div
                                         key={index}
                                         className="bg-stone-100 text-black shadow-xl rounded-xl p-6 w-full max-w-xl border-t-4 border-green-400"
                                         initial={{ opacity: 0, y: 20 }}
@@ -497,7 +509,7 @@ export default function Home() {
                                         <p className="text-gray-700 text-base break-words whitespace-pre-wrap">
                                             {review.message}
                                         </p>
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
                         )}
@@ -515,16 +527,16 @@ export default function Home() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                         <input
-                            type="email"
-                            placeholder="Your email address"
-                            className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium">
-                            Subscribe
-                        </button>
-                    </div>
-                </div>
-            </section>
-        </div>
-    );
-}
+                                            type="email"
+                                            placeholder="Your email address"
+                                            className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        />
+                                        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium">
+                                            Subscribe
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    );
+                }
