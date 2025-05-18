@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import Link from "next/link";
 import Image from "next/image";
-
+import { sendOrderConfirmation } from './actions';
 interface CartItem {
   id?: number;
   name: string;
@@ -26,6 +26,11 @@ const CheckoutPage = () => {
   const [status, setStatus] = useState({ message: "", isError: false });
   const [emailValid, setEmailValid] = useState(true);
   const [phoneValid, setPhoneValid] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [orderDetails, setOrderDetails] = useState({
+    orderNumber: "",
+    estimatedDelivery: "",
+  });
 
   useEffect(() => {
     loadCart();
@@ -84,6 +89,20 @@ const CheckoutPage = () => {
     return re.test(phone);
   };
 
+  const generateOrderNumber = () => {
+    return `ORD-${Math.floor(Math.random() * 1000000).toString().padStart(6, '0')}`;
+  };
+
+  const getEstimatedDelivery = () => {
+    const now = new Date();
+    now.setDate(now.getDate() + 3); // 3 days from now
+    return now.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
   const downloadPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
@@ -132,55 +151,77 @@ const CheckoutPage = () => {
     doc.save("order-summary.pdf");
   };
 
-  const sendOrder = async () => {
-    if (!validateEmail(email)) {
-      setStatus({ message: "Please enter a valid email address", isError: true });
-      setEmailValid(false);
-      return;
+  // Update the sendOrder function in your checkout page
+const sendOrder = async () => {
+  if (!validateEmail(email)) {
+    setStatus({ message: "Please enter a valid email address", isError: true });
+    setEmailValid(false);
+    return;
+  }
+
+  if (!validatePhone(phone)) {
+    setStatus({ message: "Please enter a valid phone number", isError: true });
+    setPhoneValid(false);
+    return;
+  }
+
+  if (!name || !address) {
+    setStatus({ message: "Please fill in all required fields", isError: true });
+    return;
+  }
+
+  setSending(true);
+  setStatus({ message: "", isError: false });
+
+  try {
+    // Generate order details
+    const orderNumber = generateOrderNumber();
+    const estimatedDelivery = getEstimatedDelivery();
+
+    // Prepare order data
+    const orderData = {
+      customer: { name, email, phone, address },
+      items: cart.map(item => ({
+        name: item.name,
+        price: item.price,
+        count: item.count
+      })),
+      total: getTotal(),
+      orderNumber,
+      estimatedDelivery
+    };
+
+    
+    console.log("Order submitted:", orderData);
+
+    // Send confirmation email
+    const emailSent = await sendOrderConfirmation(orderData);
+    
+    if (!emailSent) {
+      console.warn("Failed to send confirmation email");
     }
 
-    if (!validatePhone(phone)) {
-      setStatus({ message: "Please enter a valid phone number", isError: true });
-      setPhoneValid(false);
-      return;
-    }
+    // Set order details for success modal
+    setOrderDetails({
+      orderNumber,
+      estimatedDelivery
+    });
 
-    if (!name || !address) {
-      setStatus({ message: "Please fill in all required fields", isError: true });
-      return;
-    }
-
-    setSending(true);
-    setStatus({ message: "", isError: false });
-
-    try {
-      // In a real app, you would send this to your backend
-      console.log("Order submitted:", {
-        customer: { name, email, phone, address },
-        items: cart,
-        total: getTotal()
-      });
-
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setStatus({
-        message: "Order submitted successfully!",
-        isError: false,
-      });
-      
-      // Clear cart after successful submission
-      clearOrder();
-    } catch (error) {
-      console.error("Order submission error:", error);
-      setStatus({
-        message: "Failed to submit order. Please try again.",
-        isError: true,
-      });
-    } finally {
-      setSending(false);
-    }
-  };
+    // Show success modal
+    setShowSuccessModal(true);
+    
+    // Clear cart after successful submission
+    clearOrder();
+  } catch (error) {
+    console.error("Order submission error:", error);
+    setStatus({
+      message: "Failed to submit order. Please try again.",
+      isError: true,
+    });
+  } finally {
+    setSending(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-12">
@@ -268,12 +309,34 @@ const CheckoutPage = () => {
                 <span className="text-xl font-bold">${getTotal()}</span>
               </div>
 
-              <button
-                onClick={downloadPDF}
-                className="w-full mb-4 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-              >
-                Download PDF Receipt
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={downloadPDF}
+                  className="flex-1 px-6 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 flex items-center justify-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                  Download Receipt
+                </button>
+                <button
+                  onClick={sendOrder}
+                  disabled={sending}
+                  className={`flex-1 px-6 py-2 text-white rounded ${
+                    sending ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                  }`}
+                >
+                  {sending ? "Processing..." : "Place Order"}
+                </button>
+              </div>
+
+              {status.message && (
+                <p className={`text-sm mt-4 text-center ${
+                  status.isError ? "text-red-500" : "text-green-500"
+                }`}>
+                  {status.message}
+                </p>
+              )}
             </div>
 
             {/* Checkout Form */}
@@ -345,24 +408,6 @@ const CheckoutPage = () => {
                   />
                 </div>
 
-                <button
-                  onClick={sendOrder}
-                  disabled={sending}
-                  className={`w-full px-6 py-3 text-white rounded ${
-                    sending ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-                  }`}
-                >
-                  {sending ? "Processing..." : "Place Order"}
-                </button>
-
-                {status.message && (
-                  <p className={`text-sm text-center ${
-                    status.isError ? "text-red-500" : "text-green-500"
-                  }`}>
-                    {status.message}
-                  </p>
-                )}
-
                 <div className="text-sm text-gray-500 mt-4">
                   <p>* Required fields</p>
                   <p className="mt-2">We'll contact you to confirm your order details.</p>
@@ -372,6 +417,58 @@ const CheckoutPage = () => {
           </div>
         )}
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                <svg
+                  className="h-6 w-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold mt-3">Order Processed Successfully!</h2>
+              <p className="text-gray-600 mt-2">
+                Thank you for shopping with us.
+              </p>
+
+              <div className="mt-6 bg-gray-50 p-4 rounded-lg text-left">
+                <h3 className="font-medium">Order Details</h3>
+                <p className="mt-2 text-sm">
+                  <span className="font-medium">Order Number:</span> {orderDetails.orderNumber}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium">Estimated Delivery:</span> {orderDetails.estimatedDelivery}
+                </p>
+                <p className="text-sm mt-2">
+                  A confirmation has been sent to your email.
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

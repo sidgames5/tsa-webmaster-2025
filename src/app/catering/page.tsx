@@ -4,6 +4,16 @@ import { handleCateringSubmit } from "./actions";
 
 
 const CateringPage: React.FC = () => {
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleClick = (e: React.FormEvent) => {
+        e.preventDefault();
+        setSubmitted(true);    
+        setTimeout(() => {
+          setSubmitted(false);
+        }, 3000);
+      };
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -151,7 +161,7 @@ const CateringPage: React.FC = () => {
                 <div className="bg-[#f5f9f4] py-20">
                 <div className="max-w-6xl mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-[#3e3e3e] mb-10">Request a Quote</h2>
-                    <form action={handleCateringSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form action={handleCateringSubmit} onSubmit={handleClick} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {[
                             ["name", "Name", "text"],
                             ["email", "Email", "email"],
@@ -179,9 +189,17 @@ const CateringPage: React.FC = () => {
                         />
                         <button
                             type="submit"
-                            className="md:col-span-2 bg-[#4b934b] text-white py-4 text-lg font-semibold rounded-xl hover:bg-[#3d7a3d] transition"
+                            disabled={submitted}
+                            className={`md:col-span-2 py-4 h-[60px] text-lg font-semibold rounded-xl transition-all duration-300 flex items-center justify-center ${
+                            submitted ? "bg-green-400" : "bg-green-600 hover:green-700"
+                            } text-white`}
                         >
-                            Submit Request
+                            <span className={`transition-opacity duration-300 ${submitted ? "opacity-0 absolute" : "opacity-100"}`}>
+                                Submit Request
+                            </span>
+                            <span className={`transition-opacity duration-300 ${submitted ? "opacity-100" : "opacity-0"} absolute`}>
+                                ✅ Request Added!
+                            </span>
                         </button>
                     </form>
                 </div>

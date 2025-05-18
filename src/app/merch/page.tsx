@@ -110,30 +110,58 @@ const products: Product[] = [
   {
     id: 1,
     name: "Organic Cotton T-Shirt",
-    price: "$9.99",
+    price: "$11.99",
     image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
-    description: "Soft 100% organic cotton with minimalist print",
+    description: "Soft 100% organic cotton with minimalist logo print",
   },
   {
     id: 2,
-    name: "Bamboo Cooking Utensils",
-    price: "$22.99",
-    image: "https://cdn.pixabay.com/photo/2018/02/22/15/41/wood-3173282_1280.jpg",
-    description: "Durable and eco-friendly cooking utensils.",
+    name: "Eco Hoodie",
+    price: "$29.99",
+    image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633",
+    description: "Warm hoodie made from recycled materials",
   },
   {
     id: 3,
-    name: "Ceramic Coffee Mug",
-    price: "$14.99",
-    image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38",
-    description: "Handcrafted mug with comfortable grip",
+    name: "Sustainable Cap",
+    price: "$19.99",
+    image: "https://images.unsplash.com/photo-1521369909029-2afed882baee",
+    description: "Adjustable cap made from organic cotton",
   },
   {
     id: 4,
     name: "Bamboo Plates 5pcs",
-    price: "$11.99",
+    price: "$10.99",
     image: "https://cdn.pixabay.com/photo/2020/05/15/09/35/dish-wooden-5172967_1280.jpg",
     description: "Eco-friendly plate set",
+  },
+  {
+    id: 5,
+    name: "Bamboo Cooking Utensils",
+    price: "$21.99",
+    image: "https://cdn.pixabay.com/photo/2018/02/22/15/41/wood-3173282_1280.jpg",
+    description: "Durable and eco-friendly cooking utensils.",
+  },
+  {
+    id: 6,
+    name: "Ceramic Coffee Mug",
+    price: "$9.99",
+    image: "https://images.unsplash.com/photo-1517256064527-09c73fc73e38",
+    description: "Handcrafted mug with comfortable grip",
+  },
+  {
+    id: 7,
+    name: "Hemp Backpack",
+    price: "$79.99",
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62",
+    description: "Durable backpack made from hemp fibers",
+  },
+  {
+    id: 8,
+    name: "Eco-Friendly Water Bottle",
+    price: "$24.99",
+    image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8",
+    description: "Insulated stainless steel bottle",
   },
 ];
 
@@ -275,12 +303,17 @@ export default function MerchPage() {
                     <p className="text-gray-600 mb-3 ml-7 mr-7">{item.description}</p>
                     <div className="flex justify-between items-center ml-20 mr-7">
                       <span className="text-lg font-bold text-gray-900">{item.price}</span>
-                      <button
+                      <motion.button
+                        whileHover={{scale: 1.05}}
+                        whileTap={{ scale: 0.95 }}
                         onClick={() => addToFoodCart(item)}
-                        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-full shadow hover:from--green-600 hober:to-lime-600 transition-all duration-200"
                       >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H18m-11 0a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
                         Add to Order
-                      </button>
+                      </motion.button>
                     </div>
                   </div>
                 ))}
@@ -299,7 +332,7 @@ export default function MerchPage() {
             Our Merchandise
           </motion.h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Sustainable products for your everyday life
+            Eco-friendly clothing and accessories for your everyday life
           </p>
         </div>
 
@@ -356,8 +389,11 @@ export default function MerchPage() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => addToCart(product)}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-full shadow hover:from--green-600 hober:to-lime-600 transition-all duration-200"
                   >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8H18m-11 0a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
                     Add to Cart
                   </motion.button>
                 </div>

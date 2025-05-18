@@ -116,7 +116,7 @@ function MobileNavbar() {
                         <MobileNavLink href="/menu">Menu</MobileNavLink>
                         <MobileNavLink href="/reservations">Reservations</MobileNavLink>
                         <MobileNavLink href="/catering">Catering</MobileNavLink>
-                        <MobileNavLink href="/merch">Merch</MobileNavLink>
+                        <MobileNavLink href="/merch">Ordering</MobileNavLink>
                     </motion.ul>
                 )}
             </AnimatePresence>
@@ -227,7 +227,7 @@ function DesktopNavbar() {
                     <DesktopNavLink href="/menu">Menu</DesktopNavLink>
                     <DesktopNavLink href="/reservations">Reservations</DesktopNavLink>
                     <DesktopNavLink href="/catering">Catering</DesktopNavLink>
-                    <DesktopNavLink href="/merch">Merch</DesktopNavLink>
+                    <DesktopNavLink href="/merch">Ordering</DesktopNavLink>
                 </div>
             </div>
         </nav>
