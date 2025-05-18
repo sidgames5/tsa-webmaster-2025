@@ -1,11 +1,19 @@
 'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { admin_reviews, adminLogin, getReviews, submitReview } from './actions';
+
+interface Review {
+    name: string;
+    message: string;
+    image: string;
+    timestamp: number;
+}
 
 export default function Home() {
     const featuredDishes = [
@@ -33,7 +41,7 @@ export default function Home() {
             id: 3,
             title: "Summer Herb Pasta",
             description: "Fresh basil pesto, zucchini ribbons, sun-dried tomatoes.",
-            img: "/images/pasta.jpeg",
+            img: "/images/spaghetti-1392266_1280.jpg", // fixed path
             ingredients: ["Fresh Pasta", "Basil", "Zucchini", "Sun-dried Tomatoes", "Pine Nuts", "Parmesan"],
             calories: 610,
             seasonal: true,
@@ -113,13 +121,6 @@ export default function Home() {
     ];
     const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/4333/4333609.png";
 
-    interface Review {
-        name: string;
-        message: string;
-        image: string;
-        timestamp: number;
-    }
-
     const [reviews, setReviews] = useState<Review[]>([]);
     const [formData, setFormData] = useState({
         name: "",
@@ -136,7 +137,7 @@ export default function Home() {
     const [isAdminProcessing, setIsAdminProcessing] = useState(false);
 
     useEffect(() => {
-        const loadReviews = async () => {
+        async function loadReviews() {
             try {
                 const fetchedReviews = await getReviews();
                 setReviews(fetchedReviews);
@@ -146,33 +147,31 @@ export default function Home() {
                 const storedReviews = localStorage.getItem("reviews");
                 if (storedReviews) setReviews(JSON.parse(storedReviews));
             }
-        };
-
+        }
         loadReviews();
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
-      
+
         if (!formData.message.trim()) {
-          alert("Please write a testimonial.");
-          setIsSubmitting(false);
-          return;
+            alert("Please write a testimonial.");
+            setIsSubmitting(false);
+            return;
         }
-      
+
         try {
-          // Create a FormData object
-          const fd = new FormData();
-          fd.append('name', formData.name);
-          fd.append('message', formData.message);
-          fd.append('photo', formData.photo);
-      
-          const result = await submitReview(fd);
-          
-          if (result.success && result.review) {
-            setReviews(prev => [result.review!, ...prev]);
-            localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews]));
+            const fd = new FormData();
+            fd.append('name', formData.name);
+            fd.append('message', formData.message);
+            fd.append('photo', formData.photo);
+
+            const result = await submitReview(fd);
+
+            if (result.success && result.review) {
+                setReviews(prev => [result.review!, ...prev]);
+                localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews]));
             setFormData({ name: "", message: "", photo: defaultAvatar });
             setIsModalOpen(false);
           } else {

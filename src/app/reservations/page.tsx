@@ -32,7 +32,7 @@ export default function Page() {
             <div
                 className="relative min-h-[50vh] w-full flex items-center justify-center bg-fixed"
                 style={{
-                    backgroundImage: "url('/images/B6.webp')",
+                    backgroundImage: "url('https://cdn.pixabay.com/photo/2021/07/20/06/04/restaurant-6479818_1280.jpg')",
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}
