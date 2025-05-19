@@ -12,14 +12,14 @@ export async function handleCateringSubmit(formData: FormData) {
     const eventDate = formData.get('eventDate') as string;
     const details = formData.get('details') as string;
 
-    console.log('Catering request submitted:', { 
-        name, 
-        email, 
-        address, 
-        payment, 
-        eventType, 
-        eventDate, 
-        details 
+    console.log('Catering request submitted:', {
+        name,
+        email,
+        address,
+        payment,
+        eventType,
+        eventDate,
+        details
     });
 
     try {
@@ -49,9 +49,9 @@ export async function handleCateringSubmit(formData: FormData) {
         );
 
         if (existingRequest) {
-            return {
-                error: 'We already have a catering request for this date. Please contact us for availability.',
-            };
+            // return {
+            //     error: 'We already have a catering request for this date. Please contact us for availability.',
+            // };
         }
 
         await db.run(
@@ -61,14 +61,14 @@ export async function handleCateringSubmit(formData: FormData) {
             name, email, address, payment, eventType, eventDate, details
         );
 
-        return {
-            success: true,
-            message: 'Your catering request has been submitted successfully! We will contact you soon.'
-        };
+        // return {
+        //     success: true,
+        //     message: 'Your catering request has been submitted successfully! We will contact you soon.'
+        // };
     } catch (error) {
         console.error('Error submitting catering request:', error);
-        return {
-            error: 'An error occurred while submitting your request. Please try again later.'
-        };
+        // return {
+        //     error: 'An error occurred while submitting your request. Please try again later.'
+        // };
     }
 }

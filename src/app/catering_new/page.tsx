@@ -1,5 +1,6 @@
 'use client';
 
+import Image from "next/image";
 import { useState } from "react";
 
 export default function CateringPage() {
@@ -89,7 +90,7 @@ export default function CateringPage() {
                 <div className="absolute inset-0 bg-black/10"></div>
                 <div className="relative max-w-6xl mx-auto px-4 text-center">
                     <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                        Catering Services 
+                        Catering Services
                     </h1>
                     <p className="text-xl md:text-2xl max-w-2xl mx-auto text-amber-100">
                         Exceptional food and service for your special events.
@@ -105,8 +106,8 @@ export default function CateringPage() {
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {services.map((service, index) => (
-                            <div 
-                                key={index} 
+                            <div
+                                key={index}
                                 className={`bg-gradient-to-br ${service.gradient} text-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
                             >
                                 <div className="text-4xl mb-4">{service.icon}</div>
@@ -131,11 +132,13 @@ export default function CateringPage() {
                                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                             >
                                 <div className="h-48 overflow-hidden">
-                                    <img
+                                    <Image
                                         src={meal.image}
                                         alt={meal.title}
                                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                         loading="lazy"
+                                        width={512}
+                                        height={512}
                                     />
                                 </div>
                                 <div className="p-6">
@@ -164,7 +167,7 @@ export default function CateringPage() {
                         <h2 className="text-2xl font-bold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-amber-700">
                             Request a Quote
                         </h2>
-                        <form 
+                        <form
                             className="space-y-4"
                         >
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -182,7 +185,7 @@ export default function CateringPage() {
                                             type={field.type}
                                             placeholder={field.placeholder}
                                             className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white/80"
-                                            value={(formData as any)[field.name]}
+                                            value={formData.name}
                                             onChange={handleChange}
                                             required
                                         />

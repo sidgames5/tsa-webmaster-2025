@@ -1,41 +1,40 @@
 'use server';
 
-import * as smtplib from 'nodemailer'; 
 import { createTransport } from 'nodemailer';
 
 const smtpConfig = {
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.SMTP_EMAIL || "sid2.srinivasan@gmail.com",
-    pass: process.env.SMTP_PASSWORD || "jfew mhdc orwi cgds"
-  }
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.SMTP_EMAIL || "sid2.srinivasan@gmail.com",
+        pass: process.env.SMTP_PASSWORD || "jfew mhdc orwi cgds"
+    }
 };
 
 interface OrderDetails {
-  customer: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-  };
-  items: Array<{
-    name: string;
-    price: string;
-    count: number;
-    description?: string;
-  }>;
-  total: string;
-  orderNumber: string;
-  estimatedDelivery: string;
+    customer: {
+        name: string;
+        email: string;
+        phone: string;
+        address: string;
+    };
+    items: Array<{
+        name: string;
+        price: string;
+        count: number;
+        description?: string;
+    }>;
+    total: string;
+    orderNumber: string;
+    estimatedDelivery: string;
 }
 
 export async function sendOrderConfirmation(order: OrderDetails) {
-  const { customer, items, total, orderNumber, estimatedDelivery } = order;
-  
-  // Create HTML email content
-  const htmlContent = `
+    const { customer, items, total, orderNumber, estimatedDelivery } = order;
+
+    // Create HTML email content
+    const htmlContent = `
     <html>
     <body style="font-family: Arial, sans-serif; line-height: 1.6;">
       <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px;">
@@ -91,20 +90,20 @@ export async function sendOrderConfirmation(order: OrderDetails) {
     </html>
   `;
 
-  try {
-    const transporter = createTransport(smtpConfig);
-    
-    const info = await transporter.sendMail({
-      from: `"LeafLogic" <${smtpConfig.auth.user}>`,
-      to: customer.email,
-      subject: 'LeafLogic - Order Confirmation',
-      html: htmlContent
-    });
+    try {
+        const transporter = createTransport(smtpConfig);
 
-    console.log('Message sent: %s', info.messageId);
-    return true;
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return false;
-  }
+        const info = await transporter.sendMail({
+            from: `"LeafLogic" <${smtpConfig.auth.user}>`,
+            to: customer.email,
+            subject: 'LeafLogic - Order Confirmation',
+            html: htmlContent
+        });
+
+        console.log('Message sent: %s', info.messageId);
+        return true;
+    } catch (error) {
+        console.error('Error sending email:', error);
+        return false;
+    }
 }

@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from "react";
 import { handleCateringSubmit } from "./actions";
+import Image from "next/image";
 
 
 const CateringPage: React.FC = () => {
@@ -8,11 +9,11 @@ const CateringPage: React.FC = () => {
 
     const handleClick = (e: React.FormEvent) => {
         e.preventDefault();
-        setSubmitted(true);    
+        setSubmitted(true);
         setTimeout(() => {
-          setSubmitted(false);
+            setSubmitted(false);
         }, 3000);
-      };
+    };
 
     const [formData, setFormData] = useState({
         name: "",
@@ -24,13 +25,7 @@ const CateringPage: React.FC = () => {
         details: "",
     });
 
-    const imageLinks = [
-        "https://thumbs.dreamstime.com/b/useful-italian-vegan-food-vegetarian-bowl-breakfast-porridge-couscous-avocado-cucumber-brussels-sprouts-vegetable-stew-149990557.jpg",
-        "https://thumbs.dreamstime.com/b/vibrant-grilled-vegetable-kebab-platter-showcasing-diverse-culinary-delights-colorful-appetizing-arrangement-skewered-354573845.jpg",
-        "https://minimalistbaker.com/wp-content/uploads/2017/05/Veggie-Skewers-SQUARE.jpg",
-        "https://images.openai.com/thumbnails/b6766ba7a1afa9fcfcde8e181c003139.jpeg"
-      ];
-      
+
 
     // Handle input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -94,13 +89,13 @@ const CateringPage: React.FC = () => {
                 <div className="relative z-10 text-center px-4">
                     <h1 className="text-7xl md:text-8xl font-bold text-white mb-4 tangerine-bold">Catering</h1>
                     <p className="text-xl text-white/90 max-w-2xl mx-auto">
-                    Let us bring the comfort of a vegetarian kitchen to your next special event
+                        Let us bring the comfort of a vegetarian kitchen to your next special event
                     </p>
                 </div>
             </div>
 
             <div className="py-24 bg-[#fcf7f2] flex flex-col items-center">
-                <div className="text-center mb-16"> 
+                <div className="text-center mb-16">
                     <h1 className="text-5xl text-[#4b3f2f] tracking-white">Special Events</h1>
                     <p className="mt-4 text-[#7c6f5f] text-lg max-w-xl mx-auto">
                         Whether it&apos;s an elegant wedding or an intimate, gathering, we provide unforgettable culinary experiences.
@@ -119,7 +114,7 @@ const CateringPage: React.FC = () => {
                     ))}
                 </div>
             </div>
-                
+
             <section className="py-24 bg-gradient-to-br from-[#fdf4e4] to-[#f9eee0]">
                 <div className="max-w-6xl mx-auto px-4">
                     <h2 className="text-5xl font-extrabold text-center text-[#4b3f2f] mb-16 leading-tight">
@@ -132,11 +127,13 @@ const CateringPage: React.FC = () => {
                                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                             >
                                 <div className="h-48 overflow-hidden">
-                                    <img
+                                    <Image
                                         src={meal.image}
                                         alt={meal.title}
                                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                                         loading="lazy"
+                                        width={512}
+                                        height={512}
                                     />
                                 </div>
                                 <div className="p-6">
@@ -157,8 +154,8 @@ const CateringPage: React.FC = () => {
                     </div>
                 </div>
             </section>
-                {/* Contact Form */}
-                <div className="bg-[#f5f9f4] py-20">
+            {/* Contact Form */}
+            <div className="bg-[#f5f9f4] py-20">
                 <div className="max-w-6xl mx-auto px-6">
                     <h2 className="text-3xl font-bold text-center text-[#3e3e3e] mb-10">Request a Quote</h2>
                     <form action={handleCateringSubmit} onSubmit={handleClick} className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -190,9 +187,8 @@ const CateringPage: React.FC = () => {
                         <button
                             type="submit"
                             disabled={submitted}
-                            className={`md:col-span-2 py-4 h-[60px] text-lg font-semibold rounded-xl transition-all duration-300 flex items-center justify-center ${
-                            submitted ? "bg-green-400" : "bg-green-600 hover:green-700"
-                            } text-white`}
+                            className={`md:col-span-2 py-4 h-[60px] text-lg font-semibold rounded-xl transition-all duration-300 flex items-center justify-center ${submitted ? "bg-green-400" : "bg-green-600 hover:green-700"
+                                } text-white`}
                         >
                             <span className={`transition-opacity duration-300 ${submitted ? "opacity-0 absolute" : "opacity-100"}`}>
                                 Submit Request
@@ -204,7 +200,7 @@ const CateringPage: React.FC = () => {
                     </form>
                 </div>
             </div>
-        </div>        
+        </div>
     );
 };
 

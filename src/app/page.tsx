@@ -2,10 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { admin_reviews, adminLogin, getReviews, submitReview } from './actions';
 
 interface Review {
@@ -172,31 +170,31 @@ export default function Home() {
             if (result.success && result.review) {
                 setReviews(prev => [result.review!, ...prev]);
                 localStorage.setItem("reviews", JSON.stringify([result.review, ...reviews]));
-            setFormData({ name: "", message: "", photo: defaultAvatar });
-            setIsModalOpen(false);
-          } else {
-            throw new Error(result.error || "Submission failed");
-          }
+                setFormData({ name: "", message: "", photo: defaultAvatar });
+                setIsModalOpen(false);
+            } else {
+                throw new Error(result.error || "Submission failed");
+            }
         } catch (error) {
-          console.error("Submission error:", error);
-          alert(error instanceof Error ? error.message : "An error occurred");
+            console.error("Submission error:", error);
+            alert(error instanceof Error ? error.message : "An error occurred");
         } finally {
-          setIsSubmitting(false);
+            setIsSubmitting(false);
         }
-      };
+    };
 
     const handleAdminLogin = async () => {
         setIsAdminProcessing(true);
         try {
             const loginResult = await adminLogin(adminCredentials);
-            
+
             if (!loginResult.success) {
                 throw new Error(loginResult.error || "Login failed");
             }
 
             // If login successful, delete reviews
             const deleteResult = await admin_reviews('delete');
-            
+
             if (deleteResult.success) {
                 setReviews([]);
                 localStorage.removeItem("reviews");
@@ -392,11 +390,13 @@ export default function Home() {
                                                             className={`rounded-full overflow-hidden border-4 ${formData.photo === avatar ? "border-green-500" : "border-transparent"
                                                                 }`}
                                                             onClick={() => setFormData({ ...formData, photo: avatar })}>
-                                                            <img
+                                                            <Image
                                                                 src={avatar}
                                                                 alt={`Avatar ${index + 1}`}
                                                                 className="w-16 h-16 object-cover"
                                                                 onError={handleImageError}
+                                                                width={512}
+                                                                height={512}
                                                             />
                                                         </button>
                                                     ))}
@@ -407,11 +407,13 @@ export default function Home() {
                                                 <div
                                                     className="flex flex-col items-center gap-2 pt-4 col-span-4">
                                                     <span className="text-sm text-gray-500">Selected Avatar</span>
-                                                    <img
+                                                    <Image
                                                         src={formData.photo}
                                                         alt="Selected avatar"
                                                         className="w-24 h-24 rounded-full border-2 border-green-500 shadow-md"
                                                         onError={handleImageError}
+                                                        width={512}
+                                                        height={512}
                                                     />
                                                 </div>
                                             )}
@@ -495,11 +497,13 @@ export default function Home() {
                                         transition={{ duration: 0.4, delay: index * 0.1 }}
                                         whileHover={{ scale: 1.04 }}>
                                         <div className="flex items-center gap-4 mb-4">
-                                            <img
+                                            <Image
                                                 src={review.image || defaultAvatar}
                                                 alt="User avatar"
                                                 className="w-14 h-14 rounded-full object-cover border border-gray-300"
                                                 onError={handleImageError}
+                                                width={512}
+                                                height={512}
                                             />
                                             <h3 className="text-gray-800 text-lg font-semibold">
                                                 {review.name || "Anonymous"}
@@ -526,16 +530,16 @@ export default function Home() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
                         <input
-                                            type="email"
-                                            placeholder="Your email address"
-                                            className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-                                        />
-                                        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium">
-                                            Subscribe
-                                        </button>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    );
-                }
+                            type="email"
+                            placeholder="Your email address"
+                            className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                        <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full font-medium">
+                            Subscribe
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
+}

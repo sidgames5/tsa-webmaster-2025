@@ -71,7 +71,7 @@ export default function Page() {
                 <div className="mt-24 w-fullr h-[300px] sm:ml-30 max-w-md p-6 bg-white/70 border border-gray-200 rounded-2xl shadow-lg text-center">
                     <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">Need Help?</h2>
                     <p className="text-gray-600 text-sm sm:text-base">
-                        We're happy to accommodate special requests or answer any questions! Leave a comment in the form or contact us directly.
+                        We&apos;re happy to accommodate special requests or answer any questions! Leave a comment in the form or contact us directly.
                     </p>
                     <div className="mt-6 text-gray-700 border-2 p-4 rounded-2xl text-sm sm:text-base">
                         <p><strong>Email:</strong> sproutandspoon@gmail.com</p>
