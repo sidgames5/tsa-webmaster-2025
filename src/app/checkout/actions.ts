@@ -94,9 +94,9 @@ export async function sendOrderConfirmation(order: OrderDetails) {
         const transporter = createTransport(smtpConfig);
 
         const info = await transporter.sendMail({
-            from: `"LeafLogic" <${smtpConfig.auth.user}>`,
+            from: `"Sprout & Spoon" <${smtpConfig.auth.user}>`,
             to: customer.email,
-            subject: 'LeafLogic - Order Confirmation',
+            subject: 'Sprout & Spoon - Order Confirmation',
             html: htmlContent
         });
 

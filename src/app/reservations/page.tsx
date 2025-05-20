@@ -28,7 +28,7 @@ export default function Page() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-start bg-[#fdf7f2] h-[calc(100vh-4rem)]">
+        <div className="flex flex-col items-center justify-start bg-[#fdf7f2]">
             <div
                 className="relative min-h-[50vh] w-full flex items-center justify-center bg-fixed"
                 style={{
@@ -68,7 +68,7 @@ export default function Page() {
 
                 <div className="hidden lg:block w-[1px] h-[480px] bg-black"></div>
 
-                <div className="mt-24 w-fullr h-[300px] sm:ml-30 max-w-md p-6 bg-white/70 border border-gray-200 rounded-2xl shadow-lg text-center">
+                <div className="mt-24 w-full h-[300px] max-w-md p-6 bg-white/70 border border-gray-200 rounded-2xl shadow-lg text-center">
                     <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 mb-4">Need Help?</h2>
                     <p className="text-gray-600 text-sm sm:text-base">
                         We&apos;re happy to accommodate special requests or answer any questions! Leave a comment in the form or contact us directly.
